@@ -1,0 +1,5 @@
+mutation SetFunctionParameterTypeQuery($id: Uuid!, $exportId: Uuid!, $parameterId: Uuid!, $ty: String!) {
+  module {
+    setFunctionParameterType(id: $id, exportId: $exportId, parameterId: $parameterId, type: $ty)
+  }
+}

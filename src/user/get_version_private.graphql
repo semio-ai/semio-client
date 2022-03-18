@@ -1,0 +1,11 @@
+query GetVersionPrivateQuery($version: Int!) {
+  user {
+    getVersionPrivate(version: $version) {
+      userName
+      email
+      firstName
+      lastName
+      emailVerified
+    }
+  }
+}

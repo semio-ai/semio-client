@@ -1,0 +1,36 @@
+query GetPublicQuery($id: Uuid!) {
+  enumeration {
+    getPublic(id: $id) {
+      __typename
+      parent
+      name
+      variants {
+        id
+        variant {
+          __typename
+          name
+          type {
+            __typename
+            ... on Primitive {
+              kind
+            }
+            ... on UnfrozenScalar {
+              reference {
+                __typename
+                id
+                versionReq
+              }
+            }
+            ... on UnfrozenArray {
+              reference {
+                __typename
+                id
+                versionReq
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

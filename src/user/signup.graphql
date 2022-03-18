@@ -1,0 +1,22 @@
+mutation SignupQuery($userName: String!, $firstName: String!, $lastName: String!, $email: String!, $password: String!) {
+  user {
+    signup(userName: $userName, firstName: $firstName, lastName: $lastName, email: $email, password: $password) {
+      access {
+        token
+        expiresAt
+      }
+      refresh {
+        token
+        expiresAt
+      }
+      id
+      user {
+        userName
+        firstName
+        lastName
+        email
+        emailVerified
+      }
+    }
+  }
+}

@@ -1,0 +1,33 @@
+query GetPrivateQuery($id: Uuid!) {
+  organization {
+    getPrivate(id: $id) {
+      name
+      acl {
+        permissions {
+          __typename
+          id
+          withPermissions {
+            __typename
+            ... on Inherit {
+              from
+            }
+            ... on Permissions {
+              read
+              write
+            }
+          }
+        }
+        default {
+          __typename
+          ... on Inherit {
+            from
+          }
+          ... on Permissions {
+            read
+            write
+          }
+        }
+      }
+    }
+  }
+}

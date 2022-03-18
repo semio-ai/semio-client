@@ -1,0 +1,5 @@
+mutation RemovePermissionsQuery($id: Uuid!, $agentId: Uuid!) {
+  enumeration {
+    removePermissions(id: $id, agentId: $agentId)
+  }
+}

@@ -1,0 +1,5 @@
+mutation SetNameQuery($id: Uuid!, $name: String!) {
+  structure {
+    setName(id: $id, name: $name)
+  }
+}

@@ -1,0 +1,5 @@
+mutation CreateQuery($parent: Uuid!, $name: String!) {
+  enumeration {
+    create(parent: $parent, name: $name)
+  }
+}

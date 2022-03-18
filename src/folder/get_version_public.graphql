@@ -1,0 +1,8 @@
+query GetVersionPublicQuery($id: Uuid!, $version: Int!) {
+  folder {
+    getVersionPublic(id: $id, version: $version) {
+      parent
+      name
+    }
+  }
+}

@@ -1,0 +1,37 @@
+query GetVersionPublicQuery($id: Uuid!, $version: Int!) {
+  structure {
+    getVersionPublic(id: $id, version: $version) {
+      __typename
+      name
+      parent
+      fields {
+        __typename
+        id
+        field {
+          __typename
+          name
+          type {
+            __typename
+            ... on Primitive {
+              kind
+            }
+            ... on UnfrozenScalar {
+              reference {
+                __typename
+                id
+                versionReq
+              }
+            }
+            ... on UnfrozenArray {
+              reference {
+                __typename
+                id
+                versionReq
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

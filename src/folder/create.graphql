@@ -1,0 +1,5 @@
+mutation CreateQuery($parent: Uuid!, $name: String!) {
+  folder {
+    create(parent: $parent, name: $name)
+  }
+}

@@ -1,0 +1,5 @@
+mutation TagQuery($id: Uuid!, $version: String!) {
+  structure {
+    tag(id: $id, version: $version)
+  }
+}

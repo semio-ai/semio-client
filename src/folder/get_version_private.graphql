@@ -1,0 +1,34 @@
+query GetVersionPrivateQuery($id: Uuid!, $version: Int!) {
+  folder {
+    getVersionPrivate(id: $id, version: $version) {
+      parent
+      name
+      acl {
+        permissions {
+          __typename
+          id
+          withPermissions {
+            __typename
+            ... on Inherit {
+              from
+            }
+            ... on Permissions {
+              read
+              write
+            }
+          }
+        }
+        default {
+          __typename
+          ... on Inherit {
+            from
+          }
+          ... on Permissions {
+            read
+            write
+          }
+        }
+      }
+    }
+  }
+}

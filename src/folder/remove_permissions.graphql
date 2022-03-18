@@ -1,0 +1,5 @@
+mutation RemovePermissionsQuery($id: Uuid!, $agentId: Uuid!) {
+  folder {
+    removePermissions(id: $id, agentId: $agentId)
+  }
+}

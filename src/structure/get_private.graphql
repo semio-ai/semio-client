@@ -1,0 +1,63 @@
+query GetPrivateQuery($id: Uuid!) {
+  structure {
+    getPrivate(id: $id) {
+      __typename
+      acl {
+        permissions {
+          __typename
+          id
+          withPermissions {
+            __typename
+            ... on Inherit {
+              from
+            }
+            ... on Permissions {
+              read
+              write
+            }
+          }
+        }
+        default {
+          __typename
+          ... on Inherit {
+            from
+          }
+          ... on Permissions {
+            read
+            write
+          }
+        }
+      }
+      name
+      parent
+      fields {
+        __typename
+        id
+        field {
+          __typename
+          name
+          type {
+            __typename
+            ... on Primitive {
+              kind
+            }
+            ... on UnfrozenScalar {
+              reference {
+                __typename
+                id
+                versionReq
+              }
+            }
+            ... on UnfrozenArray {
+              reference {
+                __typename
+                id
+                versionReq
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,5 @@
+mutation AddFunctionQuery($id: Uuid!, $name: String!, $returns: String!) {
+  module {
+    addFunction(id: $id, name: $name, returns: $returns)
+  }
+}

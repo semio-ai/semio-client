@@ -1,0 +1,76 @@
+query TaggedReqQuery($id: Uuid!, $versionReq: String!) {
+  module {
+    taggedReq(id: $id, versionReq: $versionReq) {
+      __typename
+      parent
+      name
+      executable
+      dependencies {
+        id
+        version
+      }
+      exports {
+        __typename
+        id
+        export {
+          __typename
+          name
+          kind {
+            __typename
+            ... on FrozenFunction {
+              parameters {
+                __typename
+                id
+                parameter {
+                  __typename
+                  name
+                  type {
+                    __typename
+                    ... on Primitive {
+                      kind
+                    }
+                    ... on FrozenScalar {
+                      reference {
+                        __typename
+                        id
+                        version
+                      }
+                    }
+                    ... on FrozenArray {
+                      reference {
+                        __typename
+                        id
+                        version
+                      }
+                    }
+                  }
+                  mutable
+                }
+              }
+              returnType {
+                __typename
+                ... on Primitive {
+                  kind
+                }
+                ... on FrozenScalar {
+                  reference {
+                    __typename
+                    id
+                    version
+                  }
+                }
+                ... on FrozenArray {
+                  reference {
+                    __typename
+                    id
+                    version
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

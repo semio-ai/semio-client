@@ -1,0 +1,8 @@
+query GetPublicQuery($id: Uuid!) {
+  folder {
+    getPublic(id: $id) {
+      parent
+      name
+    }
+  }
+}

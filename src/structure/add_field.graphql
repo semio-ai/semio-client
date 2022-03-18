@@ -1,0 +1,5 @@
+mutation AddFieldQuery($id: Uuid!, $name: String!, $ty: String!) {
+  structure {
+    addField(id: $id, name: $name, ty: $ty)
+  }
+}

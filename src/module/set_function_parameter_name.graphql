@@ -1,0 +1,5 @@
+mutation SetFunctionParameterNameQuery($id: Uuid!, $exportId: Uuid!, $parameterId: Uuid!, $name: String!) {
+  module {
+    setFunctionParameterName(id: $id, exportId: $exportId, parameterId: $parameterId, name: $name)
+  }
+}

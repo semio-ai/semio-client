@@ -1,0 +1,7 @@
+query GetVersionPublicQuery($id: Uuid!, $version: Int!) {
+  user {
+    getVersionPublic(id: $id, version: $version) {
+      userName
+    }
+  }
+}

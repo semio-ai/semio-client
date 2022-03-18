@@ -1,0 +1,102 @@
+query GetVersionPrivateQuery($id: Uuid!, $version: Int!) {
+  module {
+    getVersionPrivate(id: $id, version: $version) {
+      __typename
+      parent
+      name
+      executable
+      dependencies {
+        id
+        versionReq
+      }
+      acl {
+        permissions {
+          __typename
+          id
+          withPermissions {
+            __typename
+            ... on Inherit {
+              from
+            }
+            ... on Permissions {
+              read
+              write
+            }
+          }
+        }
+        default {
+          __typename
+          ... on Inherit {
+            from
+          }
+          ... on Permissions {
+            read
+            write
+          }
+        }
+      }
+      exports {
+        __typename
+        id
+        export {
+          __typename
+          name
+          kind {
+            __typename
+            ... on Function {
+              parameters {
+                __typename
+                id
+                parameter {
+                  __typename
+                  name
+                  type {
+                    __typename
+                    ... on Primitive {
+                      kind
+                    }
+                    ... on UnfrozenScalar {
+                      reference {
+                        __typename
+                        id
+                        versionReq
+                      }
+                    }
+                    ... on UnfrozenArray {
+                      reference {
+                        __typename
+                        id
+                        versionReq
+                      }
+                    }
+                  }
+                  mutable
+                }
+              }
+              returnType {
+                __typename
+                ... on Primitive {
+                  kind
+                }
+                ... on UnfrozenScalar {
+                  reference {
+                    __typename
+                    id
+                    versionReq
+                  }
+                }
+                ... on UnfrozenArray {
+                  reference {
+                    __typename
+                    id
+                    versionReq
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

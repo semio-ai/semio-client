@@ -1,0 +1,21 @@
+mutation LoginWithIdQuery($id: ID!, $password: String!) {
+  user {
+    loginWithId(id: $id, password: $password) {
+      access {
+        token
+        expiresAt
+      }
+      refresh {
+        token
+        expiresAt
+      }
+      user {
+        userName
+        email
+        firstName
+        lastName
+        emailVerified
+      }
+    }
+  }
+}

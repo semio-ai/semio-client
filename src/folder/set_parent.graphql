@@ -1,0 +1,5 @@
+mutation SetParentQuery($id: Uuid!, $parent: Uuid!) {
+  folder {
+    setParent(id: $id, parent: $parent)
+  }
+}

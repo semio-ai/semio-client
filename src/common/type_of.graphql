@@ -1,0 +1,3 @@
+query TypeOfQuery($id: Uuid!) {
+  typeOf(id: $id)
+}

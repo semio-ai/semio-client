@@ -1,0 +1,34 @@
+query GetPrivateQuery($id: Uuid!) {
+  folder {
+    getPrivate(id: $id) {
+      parent
+      name
+      acl {
+        permissions {
+          __typename
+          id
+          withPermissions {
+            __typename
+            ... on Inherit {
+              from
+            }
+            ... on Permissions {
+              read
+              write
+            }
+          }
+        }
+        default {
+          __typename
+          ... on Inherit {
+            from
+          }
+          ... on Permissions {
+            read
+            write
+          }
+        }
+      }
+    }
+  }
+}

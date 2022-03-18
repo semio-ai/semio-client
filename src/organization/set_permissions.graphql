@@ -1,0 +1,5 @@
+mutation SetPermissionsQuery($id: Uuid!, $agentId: Uuid!, $withPermissions: String!) {
+  organization {
+    setPermissions(id: $id, agentId: $agentId, withPermissions: $withPermissions)
+  }
+}

@@ -1,0 +1,5 @@
+mutation SetDefaultPermissionsQuery($id: Uuid!, $withPermissions: String!) {
+  folder {
+    setDefaultPermissions(id: $id, withPermissions: $withPermissions)
+  }
+}

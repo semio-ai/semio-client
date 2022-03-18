@@ -1,0 +1,5 @@
+mutation AddPermissionsQuery($id: Uuid!, $agentId: Uuid!, $withPermissions: String!) {
+  enumeration {
+    addPermissions(id: $id, agentId: $agentId, withPermissions: $withPermissions)
+  }
+}

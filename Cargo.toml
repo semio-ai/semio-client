@@ -1,0 +1,23 @@
+[package]
+name = "semio-client"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+graphql_client = "0.10.0"
+reqwest = { version = "0.11.9", features = ["json"] }
+serde = { version = "1.0.136", features = ["derive"] }
+uuid = "0.8.2"
+semio-record = { path = "../semio-entity" }
+anyhow = "1.0.56"
+clap = { version = "3.1.6", features = ["derive"] }
+semver = { version = "1.0.6", features = ["serde"] }
+serde_json = "1.0.79"
+chrono = { version = "0.4.19", features = ["serde"] }
+semio-store-rpc = { path = "../semio-store-rpc" }
+tokio = { version = "1.17.0", features = ["full"] }
+futures = "0.3.21"
+sha2 = "0.10.2"
+lazy_static = "1.4.0"

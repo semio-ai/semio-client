@@ -1,0 +1,5 @@
+mutation SetDefaultPermissionsQuery($id: Uuid!, $withPermissions: String!) {
+  organization {
+    setDefaultPermissions(id: $id, withPermissions: $withPermissions)
+  }
+}

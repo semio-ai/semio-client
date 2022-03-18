@@ -1,0 +1,3 @@
+query TagsQuery($id: Uuid!) {
+  tags(id: $id)
+}

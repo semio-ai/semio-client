@@ -1,0 +1,5 @@
+mutation SetFirstNameQuery($firstName: String!) {
+  user {
+    setFirstName(firstName: $firstName)
+  }
+}

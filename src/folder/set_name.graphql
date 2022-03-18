@@ -1,0 +1,5 @@
+mutation SetNameQuery($id: Uuid!, $name: String!) {
+  folder {
+    setName(id: $id, name: $name)
+  }
+}

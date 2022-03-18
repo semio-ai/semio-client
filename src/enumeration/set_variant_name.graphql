@@ -1,0 +1,5 @@
+mutation SetVariantNameQuery($id: Uuid!, $variantId: Uuid!, $name: String!) {
+  enumeration {
+    setVariantName(id: $id, variantId: $variantId, name: $name)
+  }
+}

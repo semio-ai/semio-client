@@ -1,0 +1,5 @@
+mutation RemovePermissionsQuery($id: Uuid!, $agentId: Uuid!) {
+  module {
+    removePermissions(id: $id, agentId: $agentId)
+  }
+}

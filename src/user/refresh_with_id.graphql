@@ -1,0 +1,20 @@
+mutation RefreshWithIdQuery($id: Uuid!, $refreshToken: String!) {
+  user {
+    refreshWithId(id: $id, refreshToken: $refreshToken) {
+      access {
+        token
+        expiresAt
+      }
+      refresh {
+        token
+        expiresAt
+      }
+      id
+      user {
+        userName
+        email
+        firstName
+      }
+    }
+  }
+}

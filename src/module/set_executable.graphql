@@ -1,0 +1,5 @@
+mutation SetExecutableQuery($id: Uuid!, $blobId: Uuid!) {
+  module {
+    setExecutable(id: $id, blobId: $blobId)
+  }
+}

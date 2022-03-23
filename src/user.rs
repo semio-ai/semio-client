@@ -40,6 +40,7 @@ impl_public_from_response!(get_version_public_query::GetVersionPublicQueryUserGe
 impl_private_from_response!(get_version_private_query::GetVersionPrivateQueryUserGetVersionPrivate);
 impl_private_from_response!(login_query::LoginQueryUserLoginUser);
 impl_private_from_response!(signup_query::SignupQueryUserSignupUser);
+impl_private_from_response!(refresh_with_id_query::RefreshWithIdQueryUserRefreshWithIdUser);
 
 #[derive(GraphQLQuery)]
 #[graphql(
@@ -302,7 +303,7 @@ pub async fn get_public(context: &Context, get_public: GetPublic) -> anyhow::Res
   <User as RecordDefn>::Public::from_response(response.data.unwrap().user.get_public)
 }
 
-pub async fn get_private(context: &Context) -> anyhow::Result<<User as RecordDefn>::Private> {
+pub async fn get_private(context: &Context, _: GetPrivate) -> anyhow::Result<<User as RecordDefn>::Private> {
   let response = context.request::<GetPrivateQuery>(get_private_query::Variables {}).await?;
 
   check_errors(&response.errors)?;
@@ -329,4 +330,40 @@ pub async fn get_version_private(context: &Context, get_version_private: GetVers
   check_errors(&response.errors)?;
 
   <User as RecordDefn>::Private::from_response(response.data.unwrap().user.get_version_private)
+}
+
+#[derive(Debug, Parser)]
+pub struct RefreshWithId {
+  pub id: Uuid,
+  pub refresh_token: String,
+}
+
+pub struct RefreshWithIdResult {
+  pub access_token: Token,
+  pub refresh_token: Option<Token>,
+  pub id: Uuid,
+}
+
+pub async fn refresh_with_id(context: &Context, data: RefreshWithId) -> anyhow::Result<LoginResult> {
+  let response = context.request::<RefreshWithIdQuery>(refresh_with_id_query::Variables {
+    id: data.id,
+    refresh_token: data.refresh_token,
+  }).await?;
+
+  check_errors(&response.errors)?;
+
+  let data = response.data.unwrap().user.refresh_with_id;
+
+  Ok(LoginResult {
+    access_token: Token {
+      token: data.access.token,
+      expires_at: DateTime::parse_from_rfc3339(&data.access.expires_at)?.into(),
+    },
+    refresh_token: data.refresh.and_then(|refresh| Some(Token {
+      token: refresh.token,
+      expires_at: DateTime::parse_from_rfc3339(&refresh.expires_at).ok()?.into(),
+    })),
+    id: data.id,
+    user: <User as RecordDefn>::Private::from_response(data.user)?,
+  })
 }

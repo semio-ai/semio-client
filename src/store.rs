@@ -50,7 +50,7 @@ fn store_url(context: &Context) -> String {
   format!("ws://{}/store", context.url)
 }
 
-async fn upload<'a>(context: &Context, upload: Upload) -> anyhow::Result<()> {
+pub async fn upload<'a>(context: &Context, upload: Upload) -> anyhow::Result<()> {
   let client = connect(store_url(context)).await?;
   let Upload { file, mime, name, chunk_size } = upload;
   let file = PathBuf::from(file);

@@ -172,7 +172,7 @@ pub struct AddVariant {
   pub ty: UnfrozenSelectorTy,
 }
 
-async fn add_variant<'a>(context: &Context, data: AddVariant) -> anyhow::Result<i64> {
+pub async fn add_variant<'a>(context: &Context, data: AddVariant) -> anyhow::Result<i64> {
   let id = data.selector.resolve(context).await?;
   let ty = data.ty.resolve(context).await?;
   let response = context.request::<AddVariantQuery>(add_variant_query::Variables {
@@ -200,7 +200,7 @@ pub struct RemoveVariant {
   pub id: Uuid,
 }
 
-async fn remove_variant<'a>(context: &Context, data: RemoveVariant) -> anyhow::Result<i64> {
+pub async fn remove_variant<'a>(context: &Context, data: RemoveVariant) -> anyhow::Result<i64> {
   let id = data.selector.resolve(context).await?;
   let response = context.request::<RemoveVariantQuery>(remove_variant_query::Variables {
     id,
@@ -227,7 +227,7 @@ pub struct SetVariantType {
   pub ty: UnfrozenSelectorTy,
 }
 
-async fn set_variant_type<'a>(context: &Context, data: SetVariantType) -> anyhow::Result<i64> {
+pub async fn set_variant_type<'a>(context: &Context, data: SetVariantType) -> anyhow::Result<i64> {
   let id = data.selector.resolve(context).await?;
   let ty = data.ty.resolve(context).await?;
 
@@ -258,7 +258,7 @@ pub struct SetVariantName {
   pub name: String,
 }
 
-async fn set_variant_name<'a>(context: &Context, data: SetVariantName) -> anyhow::Result<i64> {
+pub async fn set_variant_name<'a>(context: &Context, data: SetVariantName) -> anyhow::Result<i64> {
   let id = data.selector.resolve(context).await?;
   let response = context.request::<SetVariantNameQuery>(set_variant_name_query::Variables {
     id,

@@ -339,7 +339,7 @@ macro_rules! impl_get_version_private {
     )]
     pub struct GetVersionPrivateQuery;
 
-    pub async fn get_version_private<'a>(context: &mut crate::context::Context, data: crate::common::GetVersionPrivate) -> anyhow::Result<$res> {
+    pub async fn get_version_private<'a>(context: &crate::context::Context, data: crate::common::GetVersionPrivate) -> anyhow::Result<$res> {
       let id = data.id.resolve(context).await?;
       let response = context.request::<GetVersionPrivateQuery>(get_version_private_query::Variables {
         id,
@@ -596,7 +596,7 @@ macro_rules! impl_tagged {
     )]
     pub struct TaggedQuery;
 
-    pub async fn tagged<'a>(context: &mut crate::context::Context, data: crate::common::Tagged) -> anyhow::Result<$res> {
+    pub async fn tagged<'a>(context: &crate::context::Context, data: crate::common::Tagged) -> anyhow::Result<$res> {
       let id = data.selector.resolve(context).await?;
       let response = context.request::<TaggedQuery>(tagged_query::Variables {
         id,
@@ -808,3 +808,66 @@ macro_rules! impl_acl_from_response {
 }
 
 pub(crate) use impl_acl_from_response;
+
+#[derive(GraphQLQuery)]
+#[graphql(
+  schema_path = "src/schema.graphql.json",
+  query_path = "src/common/tags.graphql",
+  response_derives = "Debug"
+)]
+pub struct TagsQuery;
+
+#[derive(GraphQLQuery)]
+#[graphql(
+  schema_path = "src/schema.graphql.json",
+  query_path = "src/common/type_of.graphql",
+  response_derives = "Debug"
+)]
+pub struct TypeOfQuery;
+
+
+#[derive(Debug, Parser)]
+pub struct Lookup {
+  pub selector: Selector,
+}
+
+pub async fn lookup(context: &Context, data: Lookup) -> anyhow::Result<Uuid> {
+  data.selector.resolve(context).await
+}
+
+#[derive(Debug, Parser)]
+pub struct TypeOf {
+  pub selector: Selector,
+}
+
+pub async fn type_of(context: &Context, data: TypeOf) -> anyhow::Result<String> {
+  let id = data.selector.resolve(context).await?;
+  let response = context.request::<TypeOfQuery>(type_of_query::Variables {
+    id
+  }).await?;
+  check_errors(&response.errors)?;
+  Ok(response.data.unwrap().type_of)
+}
+
+#[derive(Debug, Parser)]
+pub struct Tags {
+  pub selector: Selector,
+}
+
+pub async fn tags(context: &Context, data: Tags) -> anyhow::Result<Vec<Version>> {
+  let id = data.selector.resolve(context).await?;
+  let response = context.request::<TagsQuery>(tags_query::Variables {
+    id
+  }).await?;
+  
+  check_errors(&response.errors)?;
+
+  let data = response.data.unwrap();
+
+  let mut res = Vec::with_capacity(data.tags.len());
+  for tag in data.tags {
+    res.push(tag);
+  }
+
+  Ok(res)
+}

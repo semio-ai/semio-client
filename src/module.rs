@@ -347,7 +347,7 @@ pub struct SetExecutable {
   pub executable: Uuid,
 }
 
-async fn set_executable<'a>(context: &Context, data: SetExecutable) -> anyhow::Result<i64> {
+pub async fn set_executable<'a>(context: &Context, data: SetExecutable) -> anyhow::Result<i64> {
   let id = data.selector.resolve(context).await?;
   let response = context.request::<SetExecutableQuery>(set_executable_query::Variables {
     id,
@@ -374,7 +374,7 @@ pub struct AddFunction {
   pub return_type: UnfrozenSelectorTy,
 }
 
-async fn add_function<'a>(context: &Context, data: AddFunction) -> anyhow::Result<i64> {
+pub async fn add_function<'a>(context: &Context, data: AddFunction) -> anyhow::Result<i64> {
   let id = data.selector.resolve(context).await?;
   let return_type = data.return_type.resolve(context).await?;
   let response = context.request::<AddFunctionQuery>(add_function_query::Variables {
@@ -406,7 +406,7 @@ pub struct AppendFunctionParameter {
   pub mutable: Option<bool>,
 }
 
-async fn append_function_parameter<'a>(context: &Context, data: AppendFunctionParameter) -> anyhow::Result<i64> {
+pub async fn append_function_parameter<'a>(context: &Context, data: AppendFunctionParameter) -> anyhow::Result<i64> {
   let id = data.selector.resolve(context).await?;
   let ty = data.ty.resolve(context).await?;
   let response = context.request::<AppendFunctionParameterQuery>(append_function_parameter_query::Variables {
@@ -437,7 +437,7 @@ pub struct RemoveFunctionParameter {
   pub parameter_id: Uuid,
 }
 
-async fn remove_function_parameter<'a>(context: &Context, data: RemoveFunctionParameter) -> anyhow::Result<i64> {
+pub async fn remove_function_parameter<'a>(context: &Context, data: RemoveFunctionParameter) -> anyhow::Result<i64> {
   let id = data.selector.resolve(context).await?;
   let response = context.request::<RemoveFunctionParameterQuery>(remove_function_parameter_query::Variables {
     id,
@@ -526,7 +526,7 @@ pub struct SetFunctionReturnType {
   pub ty: UnfrozenSelectorTy,
 }
 
-async fn set_function_return_type<'a>(context: &Context, data: SetFunctionReturnType) -> anyhow::Result<i64> {
+pub async fn set_function_return_type<'a>(context: &Context, data: SetFunctionReturnType) -> anyhow::Result<i64> {
   let id = data.selector.resolve(context).await?;
   let ty = data.ty.resolve(context).await?;
   let response = context.request::<SetFunctionReturnTypeQuery>(set_function_return_type_query::Variables {

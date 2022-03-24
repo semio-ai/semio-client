@@ -10,7 +10,7 @@ graphql_client = "0.10.0"
 reqwest = { version = "0.11.9", features = ["json"] }
 serde = { version = "1.0.136", features = ["derive"] }
 uuid = "0.8.2"
-semio-record = { path = "../semio-entity" }
+semio-record = { git = "ssh://git@github.com/semio-ai/semio-entity.git", branch="master" }
 anyhow = "1.0.56"
 clap = { version = "3.1.6", features = ["derive"] }
 semver = { version = "1.0.6", features = ["serde"] }

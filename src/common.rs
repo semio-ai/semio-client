@@ -1,10 +1,13 @@
-use std::{str::FromStr, fmt::Display};
+use std::{fmt::Display, str::FromStr};
 
-use graphql_client::GraphQLQuery;
-use semio_record::{ty::{Primitive, PrimitiveKind, UnfrozenTy, UnfrozenScalar, UnfrozenArray}, record::{Version, VersionReq, UnfrozenReference}};
-use uuid::Uuid;
 use clap::Parser;
+use graphql_client::GraphQLQuery;
+use semio_record::{
+  record::{UnfrozenReference, Version, VersionReq},
+  ty::{Primitive, PrimitiveKind, UnfrozenArray, UnfrozenScalar, UnfrozenTy},
+};
 use std::fmt::Write;
+use uuid::Uuid;
 
 use crate::context::Context;
 #[derive(GraphQLQuery)]
@@ -52,25 +55,117 @@ impl FromStr for UnfrozenSelectorTy {
     let s = if array { &s[..s.len() - 2] } else { s };
     let mut iter = s.split('@');
     let s = iter.next().ok_or("Expected type".to_string())?;
-    
+
     match s {
       "unit" => Ok(PrimitiveKind::Unit.into()),
-      "bool" => Ok(if !array { PrimitiveKind::Boolean } else { PrimitiveKind::ArrayBoolean }.into()),
-      "u8" => Ok(if !array { PrimitiveKind::U8 } else { PrimitiveKind::ArrayU8 }.into()),
-      "u16" => Ok(if !array { PrimitiveKind::U16 } else { PrimitiveKind::ArrayU16 }.into()),
-      "u32" => Ok(if !array { PrimitiveKind::U32 } else { PrimitiveKind::ArrayU32 }.into()),
-      "u64" => Ok(if !array { PrimitiveKind::U64 } else { PrimitiveKind::ArrayU64 }.into()),
-      "i8" => Ok(if !array { PrimitiveKind::I8 } else { PrimitiveKind::ArrayI8 }.into()),
-      "i16" => Ok(if !array { PrimitiveKind::I16 } else { PrimitiveKind::ArrayI16 }.into()),
-      "i32" => Ok(if !array { PrimitiveKind::I32 } else { PrimitiveKind::ArrayI32 }.into()),
-      "i64" => Ok(if !array { PrimitiveKind::I64 } else { PrimitiveKind::ArrayI64 }.into()),
-      "f32" => Ok(if !array { PrimitiveKind::F32 } else { PrimitiveKind::ArrayF32 }.into()),
-      "f64" => Ok(if !array { PrimitiveKind::F64 } else { PrimitiveKind::ArrayF64 }.into()),
-      "str" => Ok(if !array { PrimitiveKind::String } else { PrimitiveKind::ArrayString }.into()),
+      "bool" => Ok(
+        if !array {
+          PrimitiveKind::Boolean
+        } else {
+          PrimitiveKind::ArrayBoolean
+        }
+        .into(),
+      ),
+      "u8" => Ok(
+        if !array {
+          PrimitiveKind::U8
+        } else {
+          PrimitiveKind::ArrayU8
+        }
+        .into(),
+      ),
+      "u16" => Ok(
+        if !array {
+          PrimitiveKind::U16
+        } else {
+          PrimitiveKind::ArrayU16
+        }
+        .into(),
+      ),
+      "u32" => Ok(
+        if !array {
+          PrimitiveKind::U32
+        } else {
+          PrimitiveKind::ArrayU32
+        }
+        .into(),
+      ),
+      "u64" => Ok(
+        if !array {
+          PrimitiveKind::U64
+        } else {
+          PrimitiveKind::ArrayU64
+        }
+        .into(),
+      ),
+      "i8" => Ok(
+        if !array {
+          PrimitiveKind::I8
+        } else {
+          PrimitiveKind::ArrayI8
+        }
+        .into(),
+      ),
+      "i16" => Ok(
+        if !array {
+          PrimitiveKind::I16
+        } else {
+          PrimitiveKind::ArrayI16
+        }
+        .into(),
+      ),
+      "i32" => Ok(
+        if !array {
+          PrimitiveKind::I32
+        } else {
+          PrimitiveKind::ArrayI32
+        }
+        .into(),
+      ),
+      "i64" => Ok(
+        if !array {
+          PrimitiveKind::I64
+        } else {
+          PrimitiveKind::ArrayI64
+        }
+        .into(),
+      ),
+      "f32" => Ok(
+        if !array {
+          PrimitiveKind::F32
+        } else {
+          PrimitiveKind::ArrayF32
+        }
+        .into(),
+      ),
+      "f64" => Ok(
+        if !array {
+          PrimitiveKind::F64
+        } else {
+          PrimitiveKind::ArrayF64
+        }
+        .into(),
+      ),
+      "str" => Ok(
+        if !array {
+          PrimitiveKind::String
+        } else {
+          PrimitiveKind::ArrayString
+        }
+        .into(),
+      ),
       _ => {
         let selector = Selector::from_str(s)?;
-        let version_req = VersionReq(iter.next().map(|v| semver::VersionReq::parse(v).ok()).flatten());
-        let reference = SelectorVersionReq { selector, version_req };
+        let version_req = VersionReq(
+          iter
+            .next()
+            .map(|v| semver::VersionReq::parse(v).ok())
+            .flatten(),
+        );
+        let reference = SelectorVersionReq {
+          selector,
+          version_req,
+        };
         Ok(if array {
           Self::Array(reference)
         } else {
@@ -191,9 +286,9 @@ impl Selector {
     match self {
       Self::Id(id) => Ok(id.clone()),
       Self::Path(path) => {
-        let response = context.request::<LookupQuery>(lookup_query::Variables {
-          path: path.clone(),
-        }).await?;
+        let response = context
+          .request::<LookupQuery>(lookup_query::Variables { path: path.clone() })
+          .await?;
 
         if let Some(errors) = response.errors {
           for error in errors {
@@ -205,7 +300,6 @@ impl Selector {
 
         Ok(response.data.unwrap().lookup)
       }
-
     }
   }
 }
@@ -220,18 +314,18 @@ impl UnfrozenSelectorTy {
           reference: UnfrozenReference {
             id,
             version_req: reference.version_req.clone(),
-          }
+          },
         }))
-      },
+      }
       Self::Array(reference) => {
         let id = reference.selector.resolve(context).await?;
         Ok(UnfrozenTy::UnfrozenArray(UnfrozenArray {
           reference: UnfrozenReference {
             id,
             version_req: reference.version_req.clone(),
-          }
+          },
         }))
-      },
+      }
     }
   }
 }
@@ -253,21 +347,26 @@ macro_rules! impl_get_public {
   ($res: ty, $id: tt, $path: literal) => {
     #[derive(graphql_client::GraphQLQuery)]
     #[graphql(
-      schema_path = "src/schema.graphql.json",
-      query_path = $path,
-      response_derives = "Debug,Serialize,Deserialize"
-    )]
+              schema_path = "src/schema.graphql.json",
+              query_path = $path,
+              response_derives = "Debug,Serialize,Deserialize"
+            )]
     pub struct GetPublicQuery;
 
-    pub async fn get_public<'a>(context: &crate::context::Context, data: crate::common::GetPublic) -> anyhow::Result<$res> {
+    pub async fn get_public<'a>(
+      context: &crate::context::Context,
+      data: crate::common::GetPublic,
+    ) -> anyhow::Result<$res> {
       let id = data.id.resolve(context).await?;
-      let response = context.request::<GetPublicQuery>(get_public_query::Variables {
-        id,
-      }).await?;
-    
+      let response = context
+        .request::<GetPublicQuery>(get_public_query::Variables { id })
+        .await?;
+
       crate::common::check_errors(&response.errors)?;
 
-      Ok(<$res>::from_response(response.data.unwrap().$id.get_public)?)
+      Ok(<$res>::from_response(
+        response.data.unwrap().$id.get_public,
+      )?)
     }
   };
 }
@@ -276,52 +375,61 @@ pub(crate) use impl_get_public;
 
 macro_rules! impl_get_private {
   ($res: ty, $id: tt, $path: literal) => {
-
     #[derive(graphql_client::GraphQLQuery)]
     #[graphql(
-      schema_path = "src/schema.graphql.json",
-      query_path = $path,
-      response_derives = "Debug,Serialize,Deserialize"
-    )]
+              schema_path = "src/schema.graphql.json",
+              query_path = $path,
+              response_derives = "Debug,Serialize,Deserialize"
+            )]
     pub struct GetPrivateQuery;
 
-    pub async fn get_private(context: &crate::context::Context, data: crate::common::GetPrivate) -> anyhow::Result<$res> {
+    pub async fn get_private(
+      context: &crate::context::Context,
+      data: crate::common::GetPrivate,
+    ) -> anyhow::Result<$res> {
       let id = data.id.resolve(context).await?;
-      let response = context.request::<GetPrivateQuery>(get_private_query::Variables {
-        id,
-      }).await?;
-    
+      let response = context
+        .request::<GetPrivateQuery>(get_private_query::Variables { id })
+        .await?;
+
       crate::common::check_errors(&response.errors)?;
 
-      Ok(<$res>::from_response(response.data.unwrap().$id.get_private)?)
+      Ok(<$res>::from_response(
+        response.data.unwrap().$id.get_private,
+      )?)
     }
   };
 }
 
 pub(crate) use impl_get_private;
 
-
 macro_rules! impl_get_version_public {
   ($res: ty, $id: tt, $path: literal) => {
-
     #[derive(graphql_client::GraphQLQuery)]
     #[graphql(
-      schema_path = "src/schema.graphql.json",
-      query_path = $path,
-      response_derives = "Debug,Serialize,Deserialize"
-    )]
+              schema_path = "src/schema.graphql.json",
+              query_path = $path,
+              response_derives = "Debug,Serialize,Deserialize"
+            )]
     pub struct GetVersionPublicQuery;
 
-    pub async fn get_version_public<'a>(context: &crate::context::Context, data: crate::common::GetVersionPublic) -> anyhow::Result<$res> {
+    pub async fn get_version_public<'a>(
+      context: &crate::context::Context,
+      data: crate::common::GetVersionPublic,
+    ) -> anyhow::Result<$res> {
       let id = data.id.resolve(context).await?;
-      let response = context.request::<GetVersionPublicQuery>(get_version_public_query::Variables {
-        id,
-        version: data.version
-      }).await?;
-    
+      let response = context
+        .request::<GetVersionPublicQuery>(get_version_public_query::Variables {
+          id,
+          version: data.version,
+        })
+        .await?;
+
       crate::common::check_errors(&response.errors)?;
 
-      Ok(<$res>::from_response(response.data.unwrap().$id.get_version_public)?)
+      Ok(<$res>::from_response(
+        response.data.unwrap().$id.get_version_public,
+      )?)
     }
   };
 }
@@ -330,25 +438,31 @@ pub(crate) use impl_get_version_public;
 
 macro_rules! impl_get_version_private {
   ($res: ty, $id: tt, $path: literal) => {
-
     #[derive(graphql_client::GraphQLQuery)]
     #[graphql(
-      schema_path = "src/schema.graphql.json",
-      query_path = $path,
-      response_derives = "Debug,Serialize,Deserialize"
-    )]
+              schema_path = "src/schema.graphql.json",
+              query_path = $path,
+              response_derives = "Debug,Serialize,Deserialize"
+            )]
     pub struct GetVersionPrivateQuery;
 
-    pub async fn get_version_private<'a>(context: &crate::context::Context, data: crate::common::GetVersionPrivate) -> anyhow::Result<$res> {
+    pub async fn get_version_private<'a>(
+      context: &crate::context::Context,
+      data: crate::common::GetVersionPrivate,
+    ) -> anyhow::Result<$res> {
       let id = data.id.resolve(context).await?;
-      let response = context.request::<GetVersionPrivateQuery>(get_version_private_query::Variables {
-        id,
-        version: data.version
-      }).await?;
-    
+      let response = context
+        .request::<GetVersionPrivateQuery>(get_version_private_query::Variables {
+          id,
+          version: data.version,
+        })
+        .await?;
+
       crate::common::check_errors(&response.errors)?;
 
-      Ok(<$res>::from_response(response.data.unwrap().$id.get_version_private)?)
+      Ok(<$res>::from_response(
+        response.data.unwrap().$id.get_version_private,
+      )?)
     }
   };
 }
@@ -357,24 +471,28 @@ pub(crate) use impl_get_version_private;
 
 macro_rules! impl_set_name {
   ($id: tt, $path: literal) => {
-
     #[derive(graphql_client::GraphQLQuery)]
     #[graphql(
-      schema_path = "src/schema.graphql.json",
-      query_path = $path,
-      response_derives = "Debug"
-    )]
+              schema_path = "src/schema.graphql.json",
+              query_path = $path,
+              response_derives = "Debug"
+            )]
     pub struct SetNameQuery;
 
-    pub async fn set_name<'a>(context: &crate::context::Context, data: crate::common::SetName) -> anyhow::Result<i64> {
+    pub async fn set_name<'a>(
+      context: &crate::context::Context,
+      data: crate::common::SetName,
+    ) -> anyhow::Result<i64> {
       let id = data.id.resolve(context).await?;
-      let response = context.request::<SetNameQuery>(set_name_query::Variables {
-        id,
-        name: data.name
-      }).await?;
-    
+      let response = context
+        .request::<SetNameQuery>(set_name_query::Variables {
+          id,
+          name: data.name,
+        })
+        .await?;
+
       crate::common::check_errors(&response.errors)?;
-    
+
       Ok(response.data.unwrap().$id.set_name)
     }
   };
@@ -384,26 +502,27 @@ pub(crate) use impl_set_name;
 
 macro_rules! impl_set_parent {
   ($id: tt, $path: literal) => {
-
     #[derive(graphql_client::GraphQLQuery)]
     #[graphql(
-      schema_path = "src/schema.graphql.json",
-      query_path = $path,
-      response_derives = "Debug"
-    )]
+              schema_path = "src/schema.graphql.json",
+              query_path = $path,
+              response_derives = "Debug"
+            )]
     pub struct SetParentQuery;
 
-    pub async fn set_parent<'a>(context: &crate::context::Context, data: crate::common::SetParent) -> anyhow::Result<i64> {
+    pub async fn set_parent<'a>(
+      context: &crate::context::Context,
+      data: crate::common::SetParent,
+    ) -> anyhow::Result<i64> {
       let id = data.id.resolve(context).await?;
       let parent = data.parent_id.resolve(context).await?;
-      
-      let response = context.request::<SetParentQuery>(set_parent_query::Variables {
-        id,
-        parent
-      }).await?;
-    
+
+      let response = context
+        .request::<SetParentQuery>(set_parent_query::Variables { id, parent })
+        .await?;
+
       crate::common::check_errors(&response.errors)?;
-    
+
       Ok(response.data.unwrap().$id.set_parent)
     }
   };
@@ -413,28 +532,31 @@ pub(crate) use impl_set_parent;
 
 macro_rules! impl_add_permissions {
   ($id: tt, $path: literal) => {
-
     #[derive(graphql_client::GraphQLQuery)]
     #[graphql(
-      schema_path = "src/schema.graphql.json",
-      query_path = $path,
-      response_derives = "Debug"
-    )]
+              schema_path = "src/schema.graphql.json",
+              query_path = $path,
+              response_derives = "Debug"
+            )]
     pub struct AddPermissionsQuery;
 
-    pub async fn add_permissions<'a>(context: &crate::context::Context, data: crate::common::AddPermissions) -> anyhow::Result<i64> {
+    pub async fn add_permissions<'a>(
+      context: &crate::context::Context,
+      data: crate::common::AddPermissions,
+    ) -> anyhow::Result<i64> {
       let id = data.id.resolve(context).await?;
       let agent = data.agent_id.resolve(context).await?;
 
-      
-      let response = context.request::<AddPermissionsQuery>(add_permissions_query::Variables {
-        id,
-        agent_id: agent,
-        with_permissions: data.with_permissions
-      }).await?;
-    
+      let response = context
+        .request::<AddPermissionsQuery>(add_permissions_query::Variables {
+          id,
+          agent_id: agent,
+          with_permissions: data.with_permissions,
+        })
+        .await?;
+
       crate::common::check_errors(&response.errors)?;
-    
+
       Ok(response.data.unwrap().$id.add_permissions)
     }
   };
@@ -444,28 +566,31 @@ pub(crate) use impl_add_permissions;
 
 macro_rules! impl_set_permissions {
   ($id: tt, $path: literal) => {
-
     #[derive(graphql_client::GraphQLQuery)]
     #[graphql(
-      schema_path = "src/schema.graphql.json",
-      query_path = $path,
-      response_derives = "Debug"
-    )]
+              schema_path = "src/schema.graphql.json",
+              query_path = $path,
+              response_derives = "Debug"
+            )]
     pub struct SetPermissionsQuery;
 
-    pub async fn set_permissions<'a>(context: &crate::context::Context, data: crate::common::SetPermissions) -> anyhow::Result<i64> {
+    pub async fn set_permissions<'a>(
+      context: &crate::context::Context,
+      data: crate::common::SetPermissions,
+    ) -> anyhow::Result<i64> {
       let id = data.id.resolve(context).await?;
       let agent = data.agent_id.resolve(context).await?;
 
-      
-      let response = context.request::<SetPermissionsQuery>(set_permissions_query::Variables {
-        id,
-        agent_id: agent,
-        with_permissions: data.with_permissions
-      }).await?;
-    
+      let response = context
+        .request::<SetPermissionsQuery>(set_permissions_query::Variables {
+          id,
+          agent_id: agent,
+          with_permissions: data.with_permissions,
+        })
+        .await?;
+
       crate::common::check_errors(&response.errors)?;
-    
+
       Ok(response.data.unwrap().$id.set_permissions)
     }
   };
@@ -475,26 +600,30 @@ pub(crate) use impl_set_permissions;
 
 macro_rules! impl_remove_permissions {
   ($id: tt, $path: literal) => {
-
     #[derive(graphql_client::GraphQLQuery)]
     #[graphql(
-      schema_path = "src/schema.graphql.json",
-      query_path = $path,
-      response_derives = "Debug"
-    )]
+              schema_path = "src/schema.graphql.json",
+              query_path = $path,
+              response_derives = "Debug"
+            )]
     pub struct RemovePermissionsQuery;
 
-    pub async fn remove_permissions<'a>(context: &crate::context::Context, data: crate::common::RemovePermissions) -> anyhow::Result<i64> {
+    pub async fn remove_permissions<'a>(
+      context: &crate::context::Context,
+      data: crate::common::RemovePermissions,
+    ) -> anyhow::Result<i64> {
       let id = data.id.resolve(context).await?;
       let agent = data.agent_id.resolve(context).await?;
-      
-      let response = context.request::<RemovePermissionsQuery>(remove_permissions_query::Variables {
-        id,
-        agent_id: agent,
-      }).await?;
-    
+
+      let response = context
+        .request::<RemovePermissionsQuery>(remove_permissions_query::Variables {
+          id,
+          agent_id: agent,
+        })
+        .await?;
+
       crate::common::check_errors(&response.errors)?;
-    
+
       Ok(response.data.unwrap().$id.remove_permissions)
     }
   };
@@ -504,25 +633,29 @@ pub(crate) use impl_remove_permissions;
 
 macro_rules! impl_set_default_permissions {
   ($id: tt, $path: literal) => {
-
     #[derive(graphql_client::GraphQLQuery)]
     #[graphql(
-      schema_path = "src/schema.graphql.json",
-      query_path = $path,
-      response_derives = "Debug"
-    )]
+              schema_path = "src/schema.graphql.json",
+              query_path = $path,
+              response_derives = "Debug"
+            )]
     pub struct SetDefaultPermissionsQuery;
 
-    pub async fn set_default_permissions<'a>(context: &crate::context::Context, data: crate::common::SetDefaultPermissions) -> anyhow::Result<i64> {
+    pub async fn set_default_permissions<'a>(
+      context: &crate::context::Context,
+      data: crate::common::SetDefaultPermissions,
+    ) -> anyhow::Result<i64> {
       let id = data.id.resolve(context).await?;
-      
-      let response = context.request::<SetDefaultPermissionsQuery>(set_default_permissions_query::Variables {
-        id,
-        with_permissions: data.with_permissions,
-      }).await?;
-    
+
+      let response = context
+        .request::<SetDefaultPermissionsQuery>(set_default_permissions_query::Variables {
+          id,
+          with_permissions: data.with_permissions,
+        })
+        .await?;
+
       crate::common::check_errors(&response.errors)?;
-    
+
       Ok(response.data.unwrap().$id.set_default_permissions)
     }
   };
@@ -532,24 +665,28 @@ pub(crate) use impl_set_default_permissions;
 
 macro_rules! impl_create {
   ($id: tt, $path: literal) => {
-
     #[derive(graphql_client::GraphQLQuery)]
     #[graphql(
-      schema_path = "src/schema.graphql.json",
-      query_path = $path,
-      response_derives = "Debug"
-    )]
+              schema_path = "src/schema.graphql.json",
+              query_path = $path,
+              response_derives = "Debug"
+            )]
     pub struct CreateQuery;
 
-    pub async fn create(context: &crate::context::Context, data: crate::common::Create) -> anyhow::Result<uuid::Uuid> {
+    pub async fn create(
+      context: &crate::context::Context,
+      data: crate::common::Create,
+    ) -> anyhow::Result<uuid::Uuid> {
       let parent = data.parent.resolve(context).await?;
-      let response = context.request::<CreateQuery>(create_query::Variables {
-        parent,
-        name: data.name,
-      }).await?;
-    
+      let response = context
+        .request::<CreateQuery>(create_query::Variables {
+          parent,
+          name: data.name,
+        })
+        .await?;
+
       crate::common::check_errors(&response.errors)?;
-    
+
       Ok(response.data.unwrap().$id.create)
     }
   };
@@ -559,25 +696,28 @@ pub(crate) use impl_create;
 
 macro_rules! impl_tag {
   ($path: literal) => {
-
     #[derive(graphql_client::GraphQLQuery)]
     #[graphql(
-      schema_path = "src/schema.graphql.json",
-      query_path = $path,
-      response_derives = "Debug"
-    )]
+              schema_path = "src/schema.graphql.json",
+              query_path = $path,
+              response_derives = "Debug"
+            )]
     pub struct TagQuery;
 
-    pub async fn tag<'a>(context: &crate::context::Context, data: crate::common::Tag) -> anyhow::Result<()> {
+    pub async fn tag<'a>(
+      context: &crate::context::Context,
+      data: crate::common::Tag,
+    ) -> anyhow::Result<()> {
       let id = data.selector.resolve(context).await?;
-      let response = context.request::<TagQuery>(tag_query::Variables {
-        id,
-        version: data.version,
-        
-      }).await?;
-    
+      let response = context
+        .request::<TagQuery>(tag_query::Variables {
+          id,
+          version: data.version,
+        })
+        .await?;
+
       crate::common::check_errors(&response.errors)?;
-    
+
       Ok(())
     }
   };
@@ -587,25 +727,28 @@ pub(crate) use impl_tag;
 
 macro_rules! impl_tagged {
   ($res: ty, $id: tt, $path: literal) => {
-
     #[derive(graphql_client::GraphQLQuery)]
     #[graphql(
-      schema_path = "src/schema.graphql.json",
-      query_path = $path,
-      response_derives = "Debug,Serialize"
-    )]
+              schema_path = "src/schema.graphql.json",
+              query_path = $path,
+              response_derives = "Debug,Serialize"
+            )]
     pub struct TaggedQuery;
 
-    pub async fn tagged<'a>(context: &crate::context::Context, data: crate::common::Tagged) -> anyhow::Result<$res> {
+    pub async fn tagged<'a>(
+      context: &crate::context::Context,
+      data: crate::common::Tagged,
+    ) -> anyhow::Result<$res> {
       let id = data.selector.resolve(context).await?;
-      let response = context.request::<TaggedQuery>(tagged_query::Variables {
-        id,
-        version: data.version,
-        
-      }).await?;
-    
+      let response = context
+        .request::<TaggedQuery>(tagged_query::Variables {
+          id,
+          version: data.version,
+        })
+        .await?;
+
       crate::common::check_errors(&response.errors)?;
-    
+
       <$res>::from_response(response.data.unwrap().$id.tagged)
     }
   };
@@ -615,23 +758,26 @@ pub(crate) use impl_tagged;
 
 macro_rules! impl_tagged_req {
   ($res: ty, $id: tt, $path: literal) => {
-
     #[derive(graphql_client::GraphQLQuery)]
     #[graphql(
-      schema_path = "src/schema.graphql.json",
-      query_path = $path,
-      response_derives = "Debug,Serialize"
-    )]
+              schema_path = "src/schema.graphql.json",
+              query_path = $path,
+              response_derives = "Debug,Serialize"
+            )]
     pub struct TaggedReqQuery;
 
-    pub async fn tagged_req<'a>(context: &crate::context::Context, data: crate::common::TaggedReq) -> anyhow::Result<$res> {
+    pub async fn tagged_req<'a>(
+      context: &crate::context::Context,
+      data: crate::common::TaggedReq,
+    ) -> anyhow::Result<$res> {
       let id = data.selector.resolve(context).await?;
-      let response = context.request::<TaggedReqQuery>(tagged_req_query::Variables {
-        id,
-        version_req: data.version_req,
-        
-      }).await?;
-    
+      let response = context
+        .request::<TaggedReqQuery>(tagged_req_query::Variables {
+          id,
+          version_req: data.version_req,
+        })
+        .await?;
+
       crate::common::check_errors(&response.errors)?;
 
       <$res>::from_response(response.data.unwrap().$id.tagged_req)
@@ -653,7 +799,7 @@ macro_rules! impl_permission_level_from_response {
         }
       }
     }
-  }
+  };
 }
 
 pub(crate) use impl_permission_level_from_response;
@@ -692,7 +838,7 @@ macro_rules! impl_primitive_kind_from_response {
         }
       }
     }
-  }
+  };
 }
 
 pub(crate) use impl_primitive_kind_from_response;
@@ -706,35 +852,39 @@ macro_rules! impl_primitive_from_response {
         })
       }
     }
-  }
+  };
 }
 
 pub(crate) use impl_primitive_from_response;
-
 
 macro_rules! impl_unfrozen_ty_from_response {
   ($query: path) => {
     impl FromResponse<$query> for semio_record::ty::UnfrozenTy {
       fn from_response(value: $query) -> anyhow::Result<Self> {
         match value {
-          <$query>::Primitive(value) => Ok(Self::Primitive(semio_record::ty::Primitive::from_response(value)?)),
-          <$query>::UnfrozenScalar(value) => Ok(Self::UnfrozenScalar(semio_record::ty::UnfrozenScalar {
-            reference: semio_record::record::UnfrozenReference {
-              id: value.reference.id,
-              version_req: value.reference.version_req,
-            }
-          })),
-          <$query>::UnfrozenArray(value) => Ok(Self::UnfrozenArray(semio_record::ty::UnfrozenArray {
-            reference: semio_record::record::UnfrozenReference {
-              id: value.reference.id,
-              version_req: value.reference.version_req,
-            }
-          })),
-          _ => Err(anyhow::anyhow!("Expected an unfrozen type {:?}", value)),
+          <$query>::Primitive(value) => Ok(Self::Primitive(
+            semio_record::ty::Primitive::from_response(value)?,
+          )),
+          <$query>::UnfrozenScalar(value) => {
+            Ok(Self::UnfrozenScalar(semio_record::ty::UnfrozenScalar {
+              reference: semio_record::record::UnfrozenReference {
+                id: value.reference.id,
+                version_req: value.reference.version_req,
+              },
+            }))
+          }
+          <$query>::UnfrozenArray(value) => {
+            Ok(Self::UnfrozenArray(semio_record::ty::UnfrozenArray {
+              reference: semio_record::record::UnfrozenReference {
+                id: value.reference.id,
+                version_req: value.reference.version_req,
+              },
+            }))
+          }
         }
       }
     }
-  }
+  };
 }
 
 pub(crate) use impl_unfrozen_ty_from_response;
@@ -744,24 +894,25 @@ macro_rules! impl_frozen_ty_from_response {
     impl FromResponse<$query> for semio_record::ty::FrozenTy {
       fn from_response(value: $query) -> anyhow::Result<Self> {
         match value {
-          <$query>::Primitive(value) => Ok(Self::Primitive(semio_record::ty::Primitive::from_response(value)?)),
+          <$query>::Primitive(value) => Ok(Self::Primitive(
+            semio_record::ty::Primitive::from_response(value)?,
+          )),
           <$query>::FrozenScalar(value) => Ok(Self::FrozenScalar(semio_record::ty::FrozenScalar {
             reference: semio_record::record::FrozenReference {
               id: value.reference.id,
               version: value.reference.version,
-            }
+            },
           })),
           <$query>::FrozenArray(value) => Ok(Self::FrozenArray(semio_record::ty::FrozenArray {
             reference: semio_record::record::FrozenReference {
               id: value.reference.id,
               version: value.reference.version,
-            }
+            },
           })),
-          _ => Err(anyhow::anyhow!("Expected an unfrozen type {:?}", value)),
         }
       }
     }
-  }
+  };
 }
 
 pub(crate) use impl_frozen_ty_from_response;
@@ -771,7 +922,6 @@ macro_rules! impl_with_permissions_from_response {
     impl FromResponse<$query> for semio_record::acl::WithPermissions {
       fn from_response(value: $query) -> anyhow::Result<Self> {
         match value {
-          
           <$query>::Inherit(inherit) => Ok(Self::Inherit(semio_record::acl::Inherit {
             from: inherit.from,
           })),
@@ -779,13 +929,11 @@ macro_rules! impl_with_permissions_from_response {
             read: semio_record::acl::PermissionLevel::from_response(custom.read)?,
             write: semio_record::acl::PermissionLevel::from_response(custom.write)?,
           })),
-          _ => Ok(Self::None(semio_record::acl::None {
-            _dummy: 0
-          })),
+          _ => Ok(Self::None(semio_record::acl::None { _dummy: 0 })),
         }
       }
     }
-  }
+  };
 }
 
 pub(crate) use impl_with_permissions_from_response;
@@ -796,7 +944,10 @@ macro_rules! impl_acl_from_response {
       fn from_response(value: $query) -> anyhow::Result<Self> {
         let mut permissions = std::collections::HashMap::new();
         for id_permission in value.permissions {
-          permissions.insert(id_permission.id, semio_record::acl::WithPermissions::from_response(id_permission.with_permissions)?);
+          permissions.insert(
+            id_permission.id,
+            semio_record::acl::WithPermissions::from_response(id_permission.with_permissions)?,
+          );
         }
         Ok(Self {
           permissions,
@@ -804,7 +955,7 @@ macro_rules! impl_acl_from_response {
         })
       }
     }
-  }
+  };
 }
 
 pub(crate) use impl_acl_from_response;
@@ -825,7 +976,6 @@ pub struct TagsQuery;
 )]
 pub struct TypeOfQuery;
 
-
 #[derive(Debug, Parser)]
 pub struct Lookup {
   pub selector: Selector,
@@ -842,9 +992,9 @@ pub struct TypeOf {
 
 pub async fn type_of(context: &Context, data: TypeOf) -> anyhow::Result<String> {
   let id = data.selector.resolve(context).await?;
-  let response = context.request::<TypeOfQuery>(type_of_query::Variables {
-    id
-  }).await?;
+  let response = context
+    .request::<TypeOfQuery>(type_of_query::Variables { id })
+    .await?;
   check_errors(&response.errors)?;
   Ok(response.data.unwrap().type_of)
 }
@@ -856,10 +1006,10 @@ pub struct Tags {
 
 pub async fn tags(context: &Context, data: Tags) -> anyhow::Result<Vec<Version>> {
   let id = data.selector.resolve(context).await?;
-  let response = context.request::<TagsQuery>(tags_query::Variables {
-    id
-  }).await?;
-  
+  let response = context
+    .request::<TagsQuery>(tags_query::Variables { id })
+    .await?;
+
   check_errors(&response.errors)?;
 
   let data = response.data.unwrap();

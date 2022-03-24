@@ -18,7 +18,7 @@ use crate::context::Context;
 )]
 pub struct LookupQuery;
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq, Eq, Hash)]
 pub enum Selector {
   Id(Uuid),
   Path(String),

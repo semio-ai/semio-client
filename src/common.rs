@@ -18,7 +18,7 @@ use crate::context::Context;
 )]
 pub struct LookupQuery;
 
-#[derive(Debug, PartialEq, Eq, Hash)]
+#[derive(Debug, PartialEq, Eq, Hash, Clone)]
 pub enum Selector {
   Id(Uuid),
   Path(String),
@@ -347,10 +347,10 @@ macro_rules! impl_get_public {
   ($res: ty, $id: tt, $path: literal) => {
     #[derive(graphql_client::GraphQLQuery)]
     #[graphql(
-              schema_path = "src/schema.graphql.json",
-              query_path = $path,
-              response_derives = "Debug,Serialize,Deserialize"
-            )]
+                          schema_path = "src/schema.graphql.json",
+                          query_path = $path,
+                          response_derives = "Debug,Serialize,Deserialize"
+                        )]
     pub struct GetPublicQuery;
 
     pub async fn get_public<'a>(
@@ -377,10 +377,10 @@ macro_rules! impl_get_private {
   ($res: ty, $id: tt, $path: literal) => {
     #[derive(graphql_client::GraphQLQuery)]
     #[graphql(
-              schema_path = "src/schema.graphql.json",
-              query_path = $path,
-              response_derives = "Debug,Serialize,Deserialize"
-            )]
+                          schema_path = "src/schema.graphql.json",
+                          query_path = $path,
+                          response_derives = "Debug,Serialize,Deserialize"
+                        )]
     pub struct GetPrivateQuery;
 
     pub async fn get_private(
@@ -407,10 +407,10 @@ macro_rules! impl_get_version_public {
   ($res: ty, $id: tt, $path: literal) => {
     #[derive(graphql_client::GraphQLQuery)]
     #[graphql(
-              schema_path = "src/schema.graphql.json",
-              query_path = $path,
-              response_derives = "Debug,Serialize,Deserialize"
-            )]
+                          schema_path = "src/schema.graphql.json",
+                          query_path = $path,
+                          response_derives = "Debug,Serialize,Deserialize"
+                        )]
     pub struct GetVersionPublicQuery;
 
     pub async fn get_version_public<'a>(
@@ -440,10 +440,10 @@ macro_rules! impl_get_version_private {
   ($res: ty, $id: tt, $path: literal) => {
     #[derive(graphql_client::GraphQLQuery)]
     #[graphql(
-              schema_path = "src/schema.graphql.json",
-              query_path = $path,
-              response_derives = "Debug,Serialize,Deserialize"
-            )]
+                          schema_path = "src/schema.graphql.json",
+                          query_path = $path,
+                          response_derives = "Debug,Serialize,Deserialize"
+                        )]
     pub struct GetVersionPrivateQuery;
 
     pub async fn get_version_private<'a>(
@@ -473,10 +473,10 @@ macro_rules! impl_set_name {
   ($id: tt, $path: literal) => {
     #[derive(graphql_client::GraphQLQuery)]
     #[graphql(
-              schema_path = "src/schema.graphql.json",
-              query_path = $path,
-              response_derives = "Debug"
-            )]
+                          schema_path = "src/schema.graphql.json",
+                          query_path = $path,
+                          response_derives = "Debug"
+                        )]
     pub struct SetNameQuery;
 
     pub async fn set_name<'a>(
@@ -504,10 +504,10 @@ macro_rules! impl_set_parent {
   ($id: tt, $path: literal) => {
     #[derive(graphql_client::GraphQLQuery)]
     #[graphql(
-              schema_path = "src/schema.graphql.json",
-              query_path = $path,
-              response_derives = "Debug"
-            )]
+                          schema_path = "src/schema.graphql.json",
+                          query_path = $path,
+                          response_derives = "Debug"
+                        )]
     pub struct SetParentQuery;
 
     pub async fn set_parent<'a>(
@@ -534,10 +534,10 @@ macro_rules! impl_add_permissions {
   ($id: tt, $path: literal) => {
     #[derive(graphql_client::GraphQLQuery)]
     #[graphql(
-              schema_path = "src/schema.graphql.json",
-              query_path = $path,
-              response_derives = "Debug"
-            )]
+                          schema_path = "src/schema.graphql.json",
+                          query_path = $path,
+                          response_derives = "Debug"
+                        )]
     pub struct AddPermissionsQuery;
 
     pub async fn add_permissions<'a>(
@@ -568,10 +568,10 @@ macro_rules! impl_set_permissions {
   ($id: tt, $path: literal) => {
     #[derive(graphql_client::GraphQLQuery)]
     #[graphql(
-              schema_path = "src/schema.graphql.json",
-              query_path = $path,
-              response_derives = "Debug"
-            )]
+                          schema_path = "src/schema.graphql.json",
+                          query_path = $path,
+                          response_derives = "Debug"
+                        )]
     pub struct SetPermissionsQuery;
 
     pub async fn set_permissions<'a>(
@@ -602,10 +602,10 @@ macro_rules! impl_remove_permissions {
   ($id: tt, $path: literal) => {
     #[derive(graphql_client::GraphQLQuery)]
     #[graphql(
-              schema_path = "src/schema.graphql.json",
-              query_path = $path,
-              response_derives = "Debug"
-            )]
+                          schema_path = "src/schema.graphql.json",
+                          query_path = $path,
+                          response_derives = "Debug"
+                        )]
     pub struct RemovePermissionsQuery;
 
     pub async fn remove_permissions<'a>(
@@ -635,10 +635,10 @@ macro_rules! impl_set_default_permissions {
   ($id: tt, $path: literal) => {
     #[derive(graphql_client::GraphQLQuery)]
     #[graphql(
-              schema_path = "src/schema.graphql.json",
-              query_path = $path,
-              response_derives = "Debug"
-            )]
+                          schema_path = "src/schema.graphql.json",
+                          query_path = $path,
+                          response_derives = "Debug"
+                        )]
     pub struct SetDefaultPermissionsQuery;
 
     pub async fn set_default_permissions<'a>(
@@ -667,10 +667,10 @@ macro_rules! impl_create {
   ($id: tt, $path: literal) => {
     #[derive(graphql_client::GraphQLQuery)]
     #[graphql(
-              schema_path = "src/schema.graphql.json",
-              query_path = $path,
-              response_derives = "Debug"
-            )]
+                          schema_path = "src/schema.graphql.json",
+                          query_path = $path,
+                          response_derives = "Debug"
+                        )]
     pub struct CreateQuery;
 
     pub async fn create(
@@ -698,10 +698,10 @@ macro_rules! impl_tag {
   ($path: literal) => {
     #[derive(graphql_client::GraphQLQuery)]
     #[graphql(
-              schema_path = "src/schema.graphql.json",
-              query_path = $path,
-              response_derives = "Debug"
-            )]
+                          schema_path = "src/schema.graphql.json",
+                          query_path = $path,
+                          response_derives = "Debug"
+                        )]
     pub struct TagQuery;
 
     pub async fn tag<'a>(
@@ -729,10 +729,10 @@ macro_rules! impl_tagged {
   ($res: ty, $id: tt, $path: literal) => {
     #[derive(graphql_client::GraphQLQuery)]
     #[graphql(
-              schema_path = "src/schema.graphql.json",
-              query_path = $path,
-              response_derives = "Debug,Serialize"
-            )]
+                          schema_path = "src/schema.graphql.json",
+                          query_path = $path,
+                          response_derives = "Debug,Serialize"
+                        )]
     pub struct TaggedQuery;
 
     pub async fn tagged<'a>(
@@ -760,10 +760,10 @@ macro_rules! impl_tagged_req {
   ($res: ty, $id: tt, $path: literal) => {
     #[derive(graphql_client::GraphQLQuery)]
     #[graphql(
-              schema_path = "src/schema.graphql.json",
-              query_path = $path,
-              response_derives = "Debug,Serialize"
-            )]
+                          schema_path = "src/schema.graphql.json",
+                          query_path = $path,
+                          response_derives = "Debug,Serialize"
+                        )]
     pub struct TaggedReqQuery;
 
     pub async fn tagged_req<'a>(

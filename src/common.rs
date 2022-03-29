@@ -990,13 +990,32 @@ pub struct TypeOf {
   pub selector: Selector,
 }
 
-pub async fn type_of(context: &Context, data: TypeOf) -> anyhow::Result<String> {
+pub async fn type_of(context: &Context, data: TypeOf) -> anyhow::Result<EntityType> {
   let id = data.selector.resolve(context).await?;
   let response = context
     .request::<TypeOfQuery>(type_of_query::Variables { id })
     .await?;
   check_errors(&response.errors)?;
-  Ok(response.data.unwrap().type_of)
+  let type_kind = match response.data.unwrap().type_of.as_str() {
+    "user" => EntityType::User,
+    "folder" => EntityType::Folder,
+    "organization" => EntityType::Organization,
+    "module" => EntityType::Module,
+    "structure" => EntityType::Structure,
+    "enumeration" => EntityType::Enumeration,
+    _ => EntityType::Unknown,
+  };
+  Ok(type_kind)
+}
+
+pub enum EntityType {
+  User,
+  Folder,
+  Organization,
+  Module,
+  Structure,
+  Enumeration,
+  Unknown,
 }
 
 #[derive(Debug, Parser)]

@@ -1,4 +1,7 @@
-use std::{fmt::Display, str::FromStr};
+use std::{
+  fmt::{Display, Formatter},
+  str::FromStr,
+};
 
 use clap::Parser;
 use graphql_client::GraphQLQuery;
@@ -1008,6 +1011,7 @@ pub async fn type_of(context: &Context, data: TypeOf) -> anyhow::Result<EntityTy
   Ok(type_kind)
 }
 
+#[derive(Debug)]
 pub enum EntityType {
   User,
   Folder,
@@ -1016,6 +1020,20 @@ pub enum EntityType {
   Structure,
   Enumeration,
   Unknown,
+}
+
+impl Display for EntityType {
+  fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+    match self {
+      EntityType::User => write!(f, "user"),
+      EntityType::Folder => write!(f, "folder"),
+      EntityType::Organization => write!(f, "organization"),
+      EntityType::Module => write!(f, "module"),
+      EntityType::Structure => write!(f, "structure"),
+      EntityType::Enumeration => write!(f, "enumeration"),
+      EntityType::Unknown => write!(f, "unknown"),
+    }
+  }
 }
 
 #[derive(Debug, Parser)]

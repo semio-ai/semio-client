@@ -1,14 +1,13 @@
-use graphql_client::GraphQLQuery;
-use clap::Parser;
-use semio_record::structure::v0::{Structure, unfrozen, frozen};
-use semio_record::ty::{FrozenTy, UnfrozenTy};
-use semio_record::acl::Acl;
-use uuid::Uuid;
 use crate::common::*;
+use crate::context::Context;
+use clap::Parser;
+use graphql_client::GraphQLQuery;
+use semio_record::acl::Acl;
+use semio_record::record::{RecordDefn, Version, VersionReq};
+use semio_record::structure::v0::{frozen, unfrozen, Structure};
+use semio_record::ty::{FrozenTy, UnfrozenTy};
 use std::collections::HashMap;
-
-use crate::{context::Context};
-use semio_record::record::{Version, VersionReq, RecordDefn};
+use uuid::Uuid;
 
 macro_rules! impl_unfrozen_structure_field_from_response {
   ($query: path) => {
@@ -20,7 +19,7 @@ macro_rules! impl_unfrozen_structure_field_from_response {
         })
       }
     }
-  }
+  };
 }
 
 macro_rules! impl_frozen_structure_field_from_response {
@@ -33,7 +32,7 @@ macro_rules! impl_frozen_structure_field_from_response {
         })
       }
     }
-  }
+  };
 }
 
 macro_rules! impl_public_from_response {
@@ -42,7 +41,10 @@ macro_rules! impl_public_from_response {
       fn from_response(value: $query) -> anyhow::Result<Self> {
         let mut fields = HashMap::new();
         for id_field in value.fields {
-          fields.insert(id_field.id, unfrozen::StructureField::from_response(id_field.field)?);
+          fields.insert(
+            id_field.id,
+            unfrozen::StructureField::from_response(id_field.field)?,
+          );
         }
         Ok(Self {
           parent: value.parent,
@@ -51,7 +53,7 @@ macro_rules! impl_public_from_response {
         })
       }
     }
-  }
+  };
 }
 
 macro_rules! impl_private_from_response {
@@ -60,7 +62,10 @@ macro_rules! impl_private_from_response {
       fn from_response(value: $query) -> anyhow::Result<Self> {
         let mut fields = HashMap::new();
         for id_field in value.fields {
-          fields.insert(id_field.id, unfrozen::StructureField::from_response(id_field.field)?);
+          fields.insert(
+            id_field.id,
+            unfrozen::StructureField::from_response(id_field.field)?,
+          );
         }
         Ok(Self {
           acl: Acl::from_response(value.acl)?,
@@ -70,7 +75,7 @@ macro_rules! impl_private_from_response {
         })
       }
     }
-  }
+  };
 }
 
 macro_rules! impl_frozen_from_response {
@@ -79,7 +84,10 @@ macro_rules! impl_frozen_from_response {
       fn from_response(value: $query) -> anyhow::Result<Self> {
         let mut fields = HashMap::new();
         for id_field in value.fields {
-          fields.insert(id_field.id, frozen::StructureField::from_response(id_field.field)?);
+          fields.insert(
+            id_field.id,
+            frozen::StructureField::from_response(id_field.field)?,
+          );
         }
         Ok(Self {
           parent: value.parent,
@@ -88,41 +96,70 @@ macro_rules! impl_frozen_from_response {
         })
       }
     }
-  }
+  };
 }
 
-
 impl_primitive_kind_from_response!(get_public_query::PrimitiveKind);
-impl_primitive_from_response!(get_public_query::GetPublicQueryStructureGetPublicFieldsFieldTypeOnPrimitive);
+impl_primitive_from_response!(
+  get_public_query::GetPublicQueryStructureGetPublicFieldsFieldTypeOnPrimitive
+);
 impl_unfrozen_ty_from_response!(get_public_query::GetPublicQueryStructureGetPublicFieldsFieldType);
-impl_unfrozen_structure_field_from_response!(get_public_query::GetPublicQueryStructureGetPublicFieldsField);
+impl_unfrozen_structure_field_from_response!(
+  get_public_query::GetPublicQueryStructureGetPublicFieldsField
+);
 impl_public_from_response!(get_public_query::GetPublicQueryStructureGetPublic);
 
 impl_permission_level_from_response!(get_private_query::PermissionLevel);
-impl_with_permissions_from_response!(get_private_query::GetPrivateQueryStructureGetPrivateAclDefault);
-impl_with_permissions_from_response!(get_private_query::GetPrivateQueryStructureGetPrivateAclPermissionsWithPermissions);
+impl_with_permissions_from_response!(
+  get_private_query::GetPrivateQueryStructureGetPrivateAclDefault
+);
+impl_with_permissions_from_response!(
+  get_private_query::GetPrivateQueryStructureGetPrivateAclPermissionsWithPermissions
+);
 impl_acl_from_response!(get_private_query::GetPrivateQueryStructureGetPrivateAcl);
 impl_primitive_kind_from_response!(get_private_query::PrimitiveKind);
-impl_primitive_from_response!(get_private_query::GetPrivateQueryStructureGetPrivateFieldsFieldTypeOnPrimitive);
-impl_unfrozen_ty_from_response!(get_private_query::GetPrivateQueryStructureGetPrivateFieldsFieldType);
-impl_unfrozen_structure_field_from_response!(get_private_query::GetPrivateQueryStructureGetPrivateFieldsField);
+impl_primitive_from_response!(
+  get_private_query::GetPrivateQueryStructureGetPrivateFieldsFieldTypeOnPrimitive
+);
+impl_unfrozen_ty_from_response!(
+  get_private_query::GetPrivateQueryStructureGetPrivateFieldsFieldType
+);
+impl_unfrozen_structure_field_from_response!(
+  get_private_query::GetPrivateQueryStructureGetPrivateFieldsField
+);
 impl_private_from_response!(get_private_query::GetPrivateQueryStructureGetPrivate);
 
 impl_primitive_kind_from_response!(get_version_public_query::PrimitiveKind);
 impl_primitive_from_response!(get_version_public_query::GetVersionPublicQueryStructureGetVersionPublicFieldsFieldTypeOnPrimitive);
-impl_unfrozen_ty_from_response!(get_version_public_query::GetVersionPublicQueryStructureGetVersionPublicFieldsFieldType);
-impl_unfrozen_structure_field_from_response!(get_version_public_query::GetVersionPublicQueryStructureGetVersionPublicFieldsField);
-impl_public_from_response!(get_version_public_query::GetVersionPublicQueryStructureGetVersionPublic);
+impl_unfrozen_ty_from_response!(
+  get_version_public_query::GetVersionPublicQueryStructureGetVersionPublicFieldsFieldType
+);
+impl_unfrozen_structure_field_from_response!(
+  get_version_public_query::GetVersionPublicQueryStructureGetVersionPublicFieldsField
+);
+impl_public_from_response!(
+  get_version_public_query::GetVersionPublicQueryStructureGetVersionPublic
+);
 
 impl_permission_level_from_response!(get_version_private_query::PermissionLevel);
-impl_with_permissions_from_response!(get_version_private_query::GetVersionPrivateQueryStructureGetVersionPrivateAclDefault);
+impl_with_permissions_from_response!(
+  get_version_private_query::GetVersionPrivateQueryStructureGetVersionPrivateAclDefault
+);
 impl_with_permissions_from_response!(get_version_private_query::GetVersionPrivateQueryStructureGetVersionPrivateAclPermissionsWithPermissions);
-impl_acl_from_response!(get_version_private_query::GetVersionPrivateQueryStructureGetVersionPrivateAcl);
+impl_acl_from_response!(
+  get_version_private_query::GetVersionPrivateQueryStructureGetVersionPrivateAcl
+);
 impl_primitive_kind_from_response!(get_version_private_query::PrimitiveKind);
 impl_primitive_from_response!(get_version_private_query::GetVersionPrivateQueryStructureGetVersionPrivateFieldsFieldTypeOnPrimitive);
-impl_unfrozen_ty_from_response!(get_version_private_query::GetVersionPrivateQueryStructureGetVersionPrivateFieldsFieldType);
-impl_unfrozen_structure_field_from_response!(get_version_private_query::GetVersionPrivateQueryStructureGetVersionPrivateFieldsField);
-impl_private_from_response!(get_version_private_query::GetVersionPrivateQueryStructureGetVersionPrivate);
+impl_unfrozen_ty_from_response!(
+  get_version_private_query::GetVersionPrivateQueryStructureGetVersionPrivateFieldsFieldType
+);
+impl_unfrozen_structure_field_from_response!(
+  get_version_private_query::GetVersionPrivateQueryStructureGetVersionPrivateFieldsField
+);
+impl_private_from_response!(
+  get_version_private_query::GetVersionPrivateQueryStructureGetVersionPrivate
+);
 
 impl_primitive_kind_from_response!(tagged_query::PrimitiveKind);
 impl_primitive_from_response!(tagged_query::TaggedQueryStructureTaggedFieldsFieldTypeOnPrimitive);
@@ -131,17 +168,36 @@ impl_frozen_structure_field_from_response!(tagged_query::TaggedQueryStructureTag
 impl_frozen_from_response!(tagged_query::TaggedQueryStructureTagged);
 
 impl_primitive_kind_from_response!(tagged_req_query::PrimitiveKind);
-impl_primitive_from_response!(tagged_req_query::TaggedReqQueryStructureTaggedReqFieldsFieldTypeOnPrimitive);
+impl_primitive_from_response!(
+  tagged_req_query::TaggedReqQueryStructureTaggedReqFieldsFieldTypeOnPrimitive
+);
 impl_frozen_ty_from_response!(tagged_req_query::TaggedReqQueryStructureTaggedReqFieldsFieldType);
-impl_frozen_structure_field_from_response!(tagged_req_query::TaggedReqQueryStructureTaggedReqFieldsField);
+impl_frozen_structure_field_from_response!(
+  tagged_req_query::TaggedReqQueryStructureTaggedReqFieldsField
+);
 impl_frozen_from_response!(tagged_req_query::TaggedReqQueryStructureTaggedReq);
 
-
 impl_create!(structure, "src/structure/create.graphql");
-impl_get_public!(<Structure as RecordDefn>::Public, structure, "src/structure/get_public.graphql");
-impl_get_private!(<Structure as RecordDefn>::Private, structure, "src/structure/get_private.graphql");
-impl_get_version_public!(<Structure as RecordDefn>::Public, structure, "src/structure/get_version_public.graphql");
-impl_get_version_private!(<Structure as RecordDefn>::Private, structure, "src/structure/get_version_private.graphql");
+impl_get_public!(
+  <Structure as RecordDefn>::Public,
+  structure,
+  "src/structure/get_public.graphql"
+);
+impl_get_private!(
+  <Structure as RecordDefn>::Private,
+  structure,
+  "src/structure/get_private.graphql"
+);
+impl_get_version_public!(
+  <Structure as RecordDefn>::Public,
+  structure,
+  "src/structure/get_version_public.graphql"
+);
+impl_get_version_private!(
+  <Structure as RecordDefn>::Private,
+  structure,
+  "src/structure/get_version_private.graphql"
+);
 impl_set_name!(structure, "src/structure/set_name.graphql");
 impl_set_parent!(structure, "src/structure/set_parent.graphql");
 impl_add_permissions!(structure, "src/structure/add_permissions.graphql");
@@ -149,8 +205,16 @@ impl_set_permissions!(structure, "src/structure/set_permissions.graphql");
 impl_remove_permissions!(structure, "src/structure/remove_permissions.graphql");
 impl_set_default_permissions!(structure, "src/structure/set_default_permissions.graphql");
 impl_tag!("src/structure/tag.graphql");
-impl_tagged!(<Structure as RecordDefn>::Frozen, structure, "src/structure/tagged.graphql");
-impl_tagged_req!(<Structure as RecordDefn>::Frozen, structure, "src/structure/tagged_req.graphql");
+impl_tagged!(
+  <Structure as RecordDefn>::Frozen,
+  structure,
+  "src/structure/tagged.graphql"
+);
+impl_tagged_req!(
+  <Structure as RecordDefn>::Frozen,
+  structure,
+  "src/structure/tagged_req.graphql"
+);
 
 #[derive(GraphQLQuery)]
 #[graphql(
@@ -191,7 +255,6 @@ pub struct SetFieldTypeQuery;
 )]
 pub struct SetFieldNameQuery;
 
-
 #[derive(Debug, Parser)]
 pub struct RemoveField {
   pub selector: Selector,
@@ -215,11 +278,13 @@ pub struct SetFieldName {
 pub async fn add_field<'a>(context: &Context, data: AddField) -> anyhow::Result<i64> {
   let id = data.selector.resolve(context).await?;
   let ty = data.ty.resolve(context).await?;
-  let response = context.request::<AddFieldQuery>(add_field_query::Variables {
-    id,
-    name: data.name,
-    ty: ty.to_string(),
-  }).await?;
+  let response = context
+    .request::<AddFieldQuery>(add_field_query::Variables {
+      id,
+      name: data.name,
+      ty: ty.to_string(),
+    })
+    .await?;
 
   check_errors(&response.errors)?;
 
@@ -228,10 +293,12 @@ pub async fn add_field<'a>(context: &Context, data: AddField) -> anyhow::Result<
 
 pub async fn remove_field<'a>(context: &Context, data: RemoveField) -> anyhow::Result<i64> {
   let id = data.selector.resolve(context).await?;
-  let response = context.request::<RemoveFieldQuery>(remove_field_query::Variables {
-    id,
-    field_id: data.id,
-  }).await?;
+  let response = context
+    .request::<RemoveFieldQuery>(remove_field_query::Variables {
+      id,
+      field_id: data.id,
+    })
+    .await?;
 
   check_errors(&response.errors)?;
 
@@ -241,11 +308,13 @@ pub async fn remove_field<'a>(context: &Context, data: RemoveField) -> anyhow::R
 pub async fn set_field_type<'a>(context: &Context, data: SetFieldType) -> anyhow::Result<i64> {
   let id = data.selector.resolve(context).await?;
   let ty = data.ty.resolve(context).await?;
-  let response = context.request::<SetFieldTypeQuery>(set_field_type_query::Variables {
-    id,
-    field_id: data.id,
-    ty: ty.to_string()
-  }).await?;
+  let response = context
+    .request::<SetFieldTypeQuery>(set_field_type_query::Variables {
+      id,
+      field_id: data.id,
+      ty: ty.to_string(),
+    })
+    .await?;
 
   check_errors(&response.errors)?;
 
@@ -254,11 +323,13 @@ pub async fn set_field_type<'a>(context: &Context, data: SetFieldType) -> anyhow
 
 pub async fn set_field_name<'a>(context: &Context, data: SetFieldName) -> anyhow::Result<i64> {
   let id = data.selector.resolve(context).await?;
-  let response = context.request::<SetFieldNameQuery>(set_field_name_query::Variables {
-    id,
-    field_id: data.id,
-    name: data.name,
-  }).await?;
+  let response = context
+    .request::<SetFieldNameQuery>(set_field_name_query::Variables {
+      id,
+      field_id: data.id,
+      name: data.name,
+    })
+    .await?;
 
   check_errors(&response.errors)?;
 

@@ -161,12 +161,14 @@ impl_private_from_response!(
   get_version_private_query::GetVersionPrivateQueryStructureGetVersionPrivate
 );
 
+// tagged_query
 impl_primitive_kind_from_response!(tagged_query::PrimitiveKind);
 impl_primitive_from_response!(tagged_query::TaggedQueryStructureTaggedFieldsFieldTypeOnPrimitive);
 impl_frozen_ty_from_response!(tagged_query::TaggedQueryStructureTaggedFieldsFieldType);
 impl_frozen_structure_field_from_response!(tagged_query::TaggedQueryStructureTaggedFieldsField);
 impl_frozen_from_response!(tagged_query::TaggedQueryStructureTagged);
 
+// tagged_req_query
 impl_primitive_kind_from_response!(tagged_req_query::PrimitiveKind);
 impl_primitive_from_response!(
   tagged_req_query::TaggedReqQueryStructureTaggedReqFieldsFieldTypeOnPrimitive
@@ -176,6 +178,20 @@ impl_frozen_structure_field_from_response!(
   tagged_req_query::TaggedReqQueryStructureTaggedReqFieldsField
 );
 impl_frozen_from_response!(tagged_req_query::TaggedReqQueryStructureTaggedReq);
+
+// get_frozen_query
+impl_primitive_kind_from_response!(get_frozen_query::PrimitiveKind);
+impl_primitive_from_response!(get_frozen_query::GetFrozenQueryStructureGetFrozenFieldsFieldTypeOnPrimitive);
+impl_frozen_ty_from_response!(get_frozen_query::GetFrozenQueryStructureGetFrozenFieldsFieldType);
+impl_frozen_structure_field_from_response!(get_frozen_query::GetFrozenQueryStructureGetFrozenFieldsField);
+impl_frozen_from_response!(get_frozen_query::GetFrozenQueryStructureGetFrozen);
+
+// get_version_frozen_query
+impl_primitive_kind_from_response!(get_version_frozen_query::PrimitiveKind);
+impl_primitive_from_response!(get_version_frozen_query::GetVersionFrozenQueryStructureGetVersionFrozenFieldsFieldTypeOnPrimitive);
+impl_frozen_ty_from_response!(get_version_frozen_query::GetVersionFrozenQueryStructureGetVersionFrozenFieldsFieldType);
+impl_frozen_structure_field_from_response!(get_version_frozen_query::GetVersionFrozenQueryStructureGetVersionFrozenFieldsField);
+impl_frozen_from_response!(get_version_frozen_query::GetVersionFrozenQueryStructureGetVersionFrozen);
 
 impl_create!(structure, "src/structure/create.graphql");
 impl_get_public!(
@@ -214,6 +230,18 @@ impl_tagged_req!(
   <Structure as RecordDefn>::Frozen,
   structure,
   "src/structure/tagged_req.graphql"
+);
+
+impl_get_frozen!(
+  <Structure as RecordDefn>::Frozen,
+  structure,
+  "src/structure/get_frozen.graphql"
+);
+
+impl_get_version_frozen!(
+  <Structure as RecordDefn>::Frozen,
+  structure,
+  "src/structure/get_version_frozen.graphql"
 );
 
 #[derive(GraphQLQuery)]

@@ -1,0 +1,37 @@
+query GetVersionFrozenQuery($id: Uuid!, $version: Int!) {
+  structure {
+    getVersionFrozen(id: $id, version: $version) {
+      __typename
+      parent
+      name
+      fields {
+        __typename
+        id
+        field {
+          __typename
+          name
+          type {
+            __typename
+            ... on Primitive {
+              kind
+            }
+            ... on FrozenScalar {
+              reference {
+                __typename
+                id
+                version
+              }
+            }
+            ... on FrozenArray {
+              reference {
+                __typename
+                id
+                version
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

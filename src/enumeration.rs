@@ -190,6 +190,35 @@ impl_frozen_enumeration_variant_from_response!(
 );
 impl_frozen_from_response!(tagged_req_query::TaggedReqQueryEnumerationTaggedReq);
 
+
+// get_frozen_query
+impl_primitive_kind_from_response!(get_frozen_query::PrimitiveKind);
+impl_primitive_from_response!(
+  get_frozen_query::GetFrozenQueryEnumerationGetFrozenVariantsVariantTypeOnPrimitive
+);
+impl_frozen_ty_from_response!(
+  get_frozen_query::GetFrozenQueryEnumerationGetFrozenVariantsVariantType
+);
+impl_frozen_enumeration_variant_from_response!(
+  get_frozen_query::GetFrozenQueryEnumerationGetFrozenVariantsVariant
+);
+impl_frozen_from_response!(get_frozen_query::GetFrozenQueryEnumerationGetFrozen);
+
+// get_version_frozen_query
+impl_primitive_kind_from_response!(get_version_frozen_query::PrimitiveKind);
+impl_primitive_from_response!(
+  get_version_frozen_query::GetVersionFrozenQueryEnumerationGetVersionFrozenVariantsVariantTypeOnPrimitive
+);
+impl_frozen_ty_from_response!(
+  get_version_frozen_query::GetVersionFrozenQueryEnumerationGetVersionFrozenVariantsVariantType
+);
+impl_frozen_enumeration_variant_from_response!(
+  get_version_frozen_query::GetVersionFrozenQueryEnumerationGetVersionFrozenVariantsVariant
+);
+impl_frozen_from_response!(
+  get_version_frozen_query::GetVersionFrozenQueryEnumerationGetVersionFrozen
+);
+
 impl_create!(enumeration, "src/enumeration/create.graphql");
 impl_get_public!(
   <Enumeration as RecordDefn>::Public,
@@ -230,6 +259,18 @@ impl_tagged_req!(
   <Enumeration as RecordDefn>::Frozen,
   enumeration,
   "src/enumeration/tagged_req.graphql"
+);
+
+impl_get_frozen!(
+  <Enumeration as RecordDefn>::Frozen,
+  enumeration,
+  "src/enumeration/get_frozen.graphql"
+);
+
+impl_get_version_frozen!(
+  <Enumeration as RecordDefn>::Frozen,
+  enumeration,
+  "src/enumeration/get_version_frozen.graphql"
 );
 
 #[derive(graphql_client::GraphQLQuery)]

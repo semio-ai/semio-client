@@ -385,6 +385,30 @@ impl_frozen_export_kind_from_response!(tagged_query::TaggedQueryModuleTaggedExpo
 impl_frozen_export_from_response!(tagged_query::TaggedQueryModuleTaggedExportsExport);
 impl_frozen_from_response!(tagged_query::TaggedQueryModuleTagged);
 
+// get_frozen_query
+impl_primitive_kind_from_response!(get_frozen_query::PrimitiveKind);
+impl_primitive_from_response!(get_frozen_query::GetFrozenQueryModuleGetFrozenExportsExportKindOnFrozenFunctionParametersParameterTypeOnPrimitive);
+impl_primitive_from_response!(get_frozen_query::GetFrozenQueryModuleGetFrozenExportsExportKindOnFrozenFunctionReturnTypeOnPrimitive);
+impl_frozen_ty_from_response!(get_frozen_query::GetFrozenQueryModuleGetFrozenExportsExportKindOnFrozenFunctionParametersParameterType);
+impl_frozen_ty_from_response!(get_frozen_query::GetFrozenQueryModuleGetFrozenExportsExportKindOnFrozenFunctionReturnType);
+impl_frozen_parameter_from_response!(get_frozen_query::GetFrozenQueryModuleGetFrozenExportsExportKindOnFrozenFunctionParametersParameter);
+impl_frozen_function_from_response!(get_frozen_query::GetFrozenQueryModuleGetFrozenExportsExportKindOnFrozenFunction);
+impl_frozen_export_kind_from_response!(get_frozen_query::GetFrozenQueryModuleGetFrozenExportsExportKind);
+impl_frozen_export_from_response!(get_frozen_query::GetFrozenQueryModuleGetFrozenExportsExport);
+impl_frozen_from_response!(get_frozen_query::GetFrozenQueryModuleGetFrozen);
+
+// get_version_frozen_query
+impl_primitive_kind_from_response!(get_version_frozen_query::PrimitiveKind);
+impl_primitive_from_response!(get_version_frozen_query::GetVersionFrozenQueryModuleGetVersionFrozenExportsExportKindOnFrozenFunctionParametersParameterTypeOnPrimitive);
+impl_primitive_from_response!(get_version_frozen_query::GetVersionFrozenQueryModuleGetVersionFrozenExportsExportKindOnFrozenFunctionReturnTypeOnPrimitive);
+impl_frozen_ty_from_response!(get_version_frozen_query::GetVersionFrozenQueryModuleGetVersionFrozenExportsExportKindOnFrozenFunctionParametersParameterType);
+impl_frozen_ty_from_response!(get_version_frozen_query::GetVersionFrozenQueryModuleGetVersionFrozenExportsExportKindOnFrozenFunctionReturnType);
+impl_frozen_parameter_from_response!(get_version_frozen_query::GetVersionFrozenQueryModuleGetVersionFrozenExportsExportKindOnFrozenFunctionParametersParameter);
+impl_frozen_function_from_response!(get_version_frozen_query::GetVersionFrozenQueryModuleGetVersionFrozenExportsExportKindOnFrozenFunction);
+impl_frozen_export_kind_from_response!(get_version_frozen_query::GetVersionFrozenQueryModuleGetVersionFrozenExportsExportKind);
+impl_frozen_export_from_response!(get_version_frozen_query::GetVersionFrozenQueryModuleGetVersionFrozenExportsExport);
+impl_frozen_from_response!(get_version_frozen_query::GetVersionFrozenQueryModuleGetVersionFrozen);
+
 impl_create!(module, "src/module/create.graphql");
 impl_get_public!(
   <Module as RecordDefn>::Public,
@@ -423,6 +447,19 @@ impl_tagged_req!(
   module,
   "src/module/tagged_req.graphql"
 );
+
+impl_get_frozen!(
+  <Module as RecordDefn>::Frozen,
+  module,
+  "src/module/get_frozen.graphql"
+);
+
+impl_get_version_frozen!(
+  <Module as RecordDefn>::Frozen,
+  module,
+  "src/module/get_version_frozen.graphql"
+);
+
 
 #[derive(graphql_client::GraphQLQuery)]
 #[graphql(

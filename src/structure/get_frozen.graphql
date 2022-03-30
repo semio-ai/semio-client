@@ -1,0 +1,37 @@
+query GetFrozenQuery($id: Uuid!) {
+  structure {
+    getFrozen(id: $id) {
+      __typename
+      parent
+      name
+      fields {
+        __typename
+        id
+        field {
+          __typename
+          name
+          type {
+            __typename
+            ... on Primitive {
+              kind
+            }
+            ... on FrozenScalar {
+              reference {
+                __typename
+                id
+                version
+              }
+            }
+            ... on FrozenArray {
+              reference {
+                __typename
+                id
+                version
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

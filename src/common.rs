@@ -284,6 +284,17 @@ pub struct TaggedReq {
   pub version_req: String,
 }
 
+#[derive(Debug, Parser)]
+pub struct GetFrozen {
+  pub selector: Selector,
+}
+
+#[derive(Debug, Parser)]
+pub struct GetVersionFrozen {
+  pub selector: Selector,
+  pub version: i64,
+}
+
 impl Selector {
   pub async fn resolve<'a>(&self, context: &Context) -> anyhow::Result<Uuid> {
     match self {
@@ -789,6 +800,68 @@ macro_rules! impl_tagged_req {
 }
 
 pub(crate) use impl_tagged_req;
+
+macro_rules! impl_get_frozen {
+  ($res: ty, $id: tt, $path: literal) => {
+    #[derive(graphql_client::GraphQLQuery)]
+    #[graphql(
+                          schema_path = "src/schema.graphql.json",
+                          query_path = $path,
+                          response_derives = "Debug,Serialize"
+                        )]
+    pub struct GetFrozenQuery;
+
+    pub async fn get_frozen<'a>(
+      context: &crate::context::Context,
+      data: crate::common::GetFrozen,
+    ) -> anyhow::Result<$res> {
+      let id = data.selector.resolve(context).await?;
+      let response = context
+        .request::<GetFrozenQuery>(get_frozen_query::Variables {
+          id,
+        })
+        .await?;
+
+      crate::common::check_errors(&response.errors)?;
+
+      <$res>::from_response(response.data.unwrap().$id.get_frozen)
+    }
+  };
+}
+
+pub(crate) use impl_get_frozen;
+
+macro_rules! impl_get_version_frozen {
+  ($res: ty, $id: tt, $path: literal) => {
+    #[derive(graphql_client::GraphQLQuery)]
+    #[graphql(
+                          schema_path = "src/schema.graphql.json",
+                          query_path = $path,
+                          response_derives = "Debug,Serialize"
+                        )]
+    pub struct GetVersionFrozenQuery;
+
+    pub async fn get_version_frozen<'a>(
+      context: &crate::context::Context,
+      data: crate::common::GetVersionFrozen,
+    ) -> anyhow::Result<$res> {
+      let id = data.selector.resolve(context).await?;
+      let response = context
+        .request::<GetVersionFrozenQuery>(get_version_frozen_query::Variables {
+          id,
+          version: data.version,
+        })
+        .await?;
+
+      crate::common::check_errors(&response.errors)?;
+
+      <$res>::from_response(response.data.unwrap().$id.get_version_frozen)
+    }
+  };
+}
+
+pub(crate) use impl_get_version_frozen;
+
 
 macro_rules! impl_permission_level_from_response {
   ($query: path) => {

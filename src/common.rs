@@ -9,6 +9,7 @@ use semio_record::{
   record::{UnfrozenReference, Version, VersionReq},
   ty::{Primitive, PrimitiveKind, UnfrozenArray, UnfrozenScalar, UnfrozenTy},
 };
+use serde::{Deserialize, Serialize};
 use std::fmt::Write;
 use uuid::Uuid;
 
@@ -1084,7 +1085,7 @@ pub async fn type_of(context: &Context, data: TypeOf) -> anyhow::Result<EntityTy
   Ok(type_kind)
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum EntityType {
   User,
   Folder,

@@ -1,8 +1,12 @@
 use graphql_client::{GraphQLQuery, Response};
 use reqwest::{Client, Url};
 
+/// An HTTP context to query the Semio API.
 pub struct Context {
+  /// The part of the URL with the host, port, and the base path of the HTTP endpoint.
   pub url: String,
+
+  /// An HTTP client. Consider setting the `AUTHORIZATION` header with the access token for authentication.
   pub client: Client,
 }
 

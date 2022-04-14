@@ -7,7 +7,7 @@ use crate::{
 };
 use chrono::Utc;
 use clap::Parser;
-use reqwest::Client;
+use reqwest::{Client, Url};
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
@@ -70,7 +70,13 @@ impl Default for ConfigMutation {
 /// Extract access token if available in a config, and refresh it if necessary.
 /// Returns a config mutation that can be used to update the config.
 pub async fn access_token(config: &Config) -> anyhow::Result<(Option<String>, ConfigMutation)> {
-  let url = config.url.as_ref().unwrap().as_str();
+  let url = Url::parse(
+    config
+      .url
+      .as_ref()
+      .ok_or(anyhow::anyhow!("missing URL information in config"))?,
+  )
+  .map_err(|_| anyhow::anyhow!("Invalid registry URL"))?;
 
   if let Some(access) = &config.access {
     if access.expires_at > Utc::now() {
@@ -79,11 +85,7 @@ pub async fn access_token(config: &Config) -> anyhow::Result<(Option<String>, Co
       if let Some(user_id) = &config.user_id {
         if let Some(refresh) = &config.refresh {
           let client = Client::builder().build()?;
-
-          let context = Context {
-            url: url.to_string(),
-            client,
-          };
+          let context = Context::new(url, client);
           let res = refresh_with_id(
             &context,
             RefreshWithId {

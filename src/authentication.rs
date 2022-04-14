@@ -1,10 +1,12 @@
 use crate::{
+  cli::{std_prompt, StdPromptOptions},
   context::Context,
   mutation::Mutation,
   user::{refresh_with_id, Logout, RefreshWithId},
-  Token, cli::{StdPromptOptions, std_prompt},
+  Token,
 };
 use chrono::Utc;
+use clap::Parser;
 use reqwest::Client;
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
@@ -119,10 +121,12 @@ pub async fn access_token(config: &Config) -> anyhow::Result<(Option<String>, Co
   }
 }
 
-
-#[derive(Debug)]
+#[derive(Debug, Parser)]
 pub struct Login {
+  #[clap(short, long, name = "user-name")]
   pub user_name: Option<String>,
+
+  #[clap(short, long)]
   pub password: Option<String>,
 }
 
@@ -172,12 +176,21 @@ pub async fn login(context: &Context, login: Login) -> anyhow::Result<ConfigMuta
   Ok(mutation)
 }
 
-#[derive(Debug)]
+#[derive(Debug, Parser)]
 pub struct Signup {
+  #[clap(short, long, name = "user-name")]
   pub user_name: Option<String>,
+
+  #[clap(short, long)]
   pub first_name: Option<String>,
+
+  #[clap(short, long)]
   pub last_name: Option<String>,
+
+  #[clap(short, long)]
   pub email: Option<String>,
+
+  #[clap(short, long)]
   pub password: Option<String>,
 }
 

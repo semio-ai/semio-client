@@ -3,7 +3,7 @@ use reqwest::{Client, Url};
 
 /// An HTTP context to query the Semio API.
 pub struct Context {
-  /// The part of the URL with the host, port, and the base path of the HTTP endpoint.
+  /// The part of the URL with the host, port, and the base path (typically `/`) of the HTTP endpoint.
   pub url: String,
 
   /// An HTTP client. Consider setting the `AUTHORIZATION` header with the access token for authentication.
@@ -32,7 +32,7 @@ impl Context {
     let body = Q::build_query(variables);
     let reqwest_response = self
       .client
-      .post(format!("http://{}/graphql", self.url))
+      .post(format!("http://{}graphql", self.url))
       .json(&body)
       .send()
       .await?;

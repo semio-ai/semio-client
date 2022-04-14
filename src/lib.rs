@@ -10,11 +10,14 @@ pub struct Token {
 }
 
 pub mod animation;
+pub mod authentication;
+pub mod cli;
 pub mod common;
 pub mod context;
 pub mod enumeration;
 pub mod folder;
 pub mod module;
+pub mod mutation;
 pub mod organization;
 pub mod store;
 pub mod structure;

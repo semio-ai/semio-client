@@ -14,7 +14,7 @@ impl Context {
   pub fn new(url: Url, client: Client) -> Self {
     Self {
       url: format!(
-        "{}:{}/{}",
+        "{}:{}{}",
         url.host_str().unwrap(),
         url.port().unwrap(),
         url.path()

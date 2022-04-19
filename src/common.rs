@@ -1067,26 +1067,26 @@ pub struct TypeOf {
   pub selector: Selector,
 }
 
-pub async fn type_of(context: &Context, data: TypeOf) -> anyhow::Result<EntityType> {
+pub async fn type_of(context: &Context, data: TypeOf) -> anyhow::Result<RecordType> {
   let id = data.selector.resolve(context).await?;
   let response = context
     .request::<TypeOfQuery>(type_of_query::Variables { id })
     .await?;
   check_errors(&response.errors)?;
   let type_kind = match response.data.unwrap().type_of.as_str() {
-    "user" => EntityType::User,
-    "folder" => EntityType::Folder,
-    "organization" => EntityType::Organization,
-    "module" => EntityType::Module,
-    "structure" => EntityType::Structure,
-    "enumeration" => EntityType::Enumeration,
-    _ => EntityType::Unknown,
+    "user" => RecordType::User,
+    "folder" => RecordType::Folder,
+    "organization" => RecordType::Organization,
+    "module" => RecordType::Module,
+    "structure" => RecordType::Structure,
+    "enumeration" => RecordType::Enumeration,
+    _ => RecordType::Unknown,
   };
   Ok(type_kind)
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub enum EntityType {
+pub enum RecordType {
   User,
   Folder,
   Organization,
@@ -1096,16 +1096,16 @@ pub enum EntityType {
   Unknown,
 }
 
-impl Display for EntityType {
+impl Display for RecordType {
   fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
     match self {
-      EntityType::User => write!(f, "user"),
-      EntityType::Folder => write!(f, "folder"),
-      EntityType::Organization => write!(f, "organization"),
-      EntityType::Module => write!(f, "module"),
-      EntityType::Structure => write!(f, "structure"),
-      EntityType::Enumeration => write!(f, "enumeration"),
-      EntityType::Unknown => write!(f, "unknown"),
+      RecordType::User => write!(f, "user"),
+      RecordType::Folder => write!(f, "folder"),
+      RecordType::Organization => write!(f, "organization"),
+      RecordType::Module => write!(f, "module"),
+      RecordType::Structure => write!(f, "structure"),
+      RecordType::Enumeration => write!(f, "enumeration"),
+      RecordType::Unknown => write!(f, "unknown"),
     }
   }
 }

@@ -70,6 +70,8 @@ but some of them are common:
   the given version requirement tag.
 - `tags`: lists the tags of a record.
   This can be used to resolve the version tag matching a version requirement.
+- `get_frozen`: freezes a record on-the-fly,
+  without producing a new tagged record.
 
 ## Selector
 

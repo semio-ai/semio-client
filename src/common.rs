@@ -22,21 +22,22 @@ use crate::context::Context;
 )]
 pub struct LookupQuery;
 
-/**
- * A selector describes a record by its UUID or name identifier.
- */
+/// A selector describes a record by its UUID or name identifier,
+/// with no version information included.
 #[derive(Debug, PartialEq, Eq, Hash, Clone)]
 pub enum Selector {
   Id(Uuid),
   Path(String),
 }
 
+/// A reference to a record with a version requirement.
 #[derive(Debug)]
 pub struct SelectorVersionReq {
   pub selector: Selector,
   pub version_req: VersionReq,
 }
 
+/// A reference to a type with a version requirement.
 #[derive(Debug)]
 pub enum UnfrozenSelectorTy {
   Primitive(Primitive),

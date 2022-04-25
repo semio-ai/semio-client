@@ -22,6 +22,9 @@ use crate::context::Context;
 )]
 pub struct LookupQuery;
 
+/**
+ * A selector describes a record by its UUID or name identifier.
+ */
 #[derive(Debug, PartialEq, Eq, Hash, Clone)]
 pub enum Selector {
   Id(Uuid),

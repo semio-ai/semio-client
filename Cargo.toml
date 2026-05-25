@@ -7,7 +7,7 @@ edition = "2021"
 
 [dependencies]
 semio-record = { git = "https://github.com/semio-ai/semio-record.git", branch = "master" }
-semio-store-rpc = { git = "https://github.com/semio-ai/semio-store-rpc.git", branch = "update" }
+semio-store-rpc = { git = "https://github.com/semio-ai/semio-store-rpc.git", branch = "master" }
 anyhow = "1.0.56"
 chrono = { version = "0.4.19", features = ["serde"] }
 clap = { version = "3.1.6", features = ["derive"] }

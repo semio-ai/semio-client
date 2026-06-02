@@ -5,7 +5,7 @@ use semio_record::acl::Acl;
 use semio_record::enumeration::v0::{frozen, unfrozen, Enumeration};
 use semio_record::record::{RecordDefn, Version, VersionReq};
 use semio_record::ty::{FrozenTy, UnfrozenTy};
-use std::collections::HashMap;
+use indexmap::IndexMap;
 use uuid::Uuid;
 
 macro_rules! impl_unfrozen_enumeration_variant_from_response {
@@ -38,7 +38,7 @@ macro_rules! impl_public_from_response {
   ($query: path) => {
     impl FromResponse<$query> for <Enumeration as RecordDefn>::Public {
       fn from_response(value: $query) -> anyhow::Result<Self> {
-        let mut variants = HashMap::new();
+        let mut variants = IndexMap::new();
         for id_variant in value.variants {
           variants.insert(
             id_variant.id,
@@ -59,7 +59,7 @@ macro_rules! impl_private_from_response {
   ($query: path) => {
     impl FromResponse<$query> for <Enumeration as RecordDefn>::Private {
       fn from_response(value: $query) -> anyhow::Result<Self> {
-        let mut variants = HashMap::new();
+        let mut variants = IndexMap::new();
         for id_variant in value.variants {
           variants.insert(
             id_variant.id,
@@ -81,7 +81,7 @@ macro_rules! impl_frozen_from_response {
   ($query: path) => {
     impl FromResponse<$query> for <Enumeration as RecordDefn>::Frozen {
       fn from_response(value: $query) -> anyhow::Result<Self> {
-        let mut variants = HashMap::new();
+        let mut variants = IndexMap::new();
         for id_variant in value.variants {
           variants.insert(
             id_variant.id,

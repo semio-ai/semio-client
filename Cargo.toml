@@ -9,7 +9,7 @@ edition = "2021"
 semio-record = { git = "https://github.com/semio-ai/semio-record.git", branch = "main" }
 semio-store-rpc = { git = "https://github.com/semio-ai/semio-store-rpc.git", branch = "main" }
 anyhow = "1.0.56"
-indexmap = { version = "1", features = ["serde"] }
+indexmap = { version = "2", features = ["serde"] }
 chrono = { version = "0.4.19", features = ["serde"] }
 clap = { version = "3.1.6", features = ["derive"] }
 futures = "0.3.21"

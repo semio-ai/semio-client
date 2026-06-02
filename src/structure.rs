@@ -6,7 +6,7 @@ use semio_record::acl::Acl;
 use semio_record::record::{RecordDefn, Version, VersionReq};
 use semio_record::structure::v0::{frozen, unfrozen, Structure};
 use semio_record::ty::{FrozenTy, UnfrozenTy};
-use std::collections::HashMap;
+use indexmap::IndexMap;
 use uuid::Uuid;
 
 macro_rules! impl_unfrozen_structure_field_from_response {
@@ -39,7 +39,7 @@ macro_rules! impl_public_from_response {
   ($query: path) => {
     impl FromResponse<$query> for <Structure as RecordDefn>::Public {
       fn from_response(value: $query) -> anyhow::Result<Self> {
-        let mut fields = HashMap::new();
+        let mut fields = IndexMap::new();
         for id_field in value.fields {
           fields.insert(
             id_field.id,
@@ -60,7 +60,7 @@ macro_rules! impl_private_from_response {
   ($query: path) => {
     impl FromResponse<$query> for <Structure as RecordDefn>::Private {
       fn from_response(value: $query) -> anyhow::Result<Self> {
-        let mut fields = HashMap::new();
+        let mut fields = IndexMap::new();
         for id_field in value.fields {
           fields.insert(
             id_field.id,
@@ -82,7 +82,7 @@ macro_rules! impl_frozen_from_response {
   ($query: path) => {
     impl FromResponse<$query> for <Structure as RecordDefn>::Frozen {
       fn from_response(value: $query) -> anyhow::Result<Self> {
-        let mut fields = HashMap::new();
+        let mut fields = IndexMap::new();
         for id_field in value.fields {
           fields.insert(
             id_field.id,

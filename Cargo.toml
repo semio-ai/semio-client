@@ -6,7 +6,7 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-semio-record = { git = "https://github.com/semio-ai/semio-record.git", branch = "master" }
+semio-record = { git = "https://github.com/semio-ai/semio-record.git", branch = "main" }
 semio-store-rpc = { git = "https://github.com/semio-ai/semio-store-rpc.git", branch = "master" }
 anyhow = "1.0.56"
 chrono = { version = "0.4.19", features = ["serde"] }

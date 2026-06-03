@@ -8,21 +8,18 @@ edition = "2021"
 [dependencies]
 semio-record = { git = "https://github.com/semio-ai/semio-record.git", branch = "main" }
 semio-store-rpc = { git = "https://github.com/semio-ai/semio-store-rpc.git", branch = "main" }
-anyhow = "1.0.56"
+anyhow = "1"
 indexmap = { version = "2", features = ["serde"] }
-chrono = { version = "0.4.19", features = ["serde"] }
-clap = { version = "3.1.6", features = ["derive"] }
-futures = "0.3.21"
-graphql_client = "0.10.0"
-lazy_static = "1.4.0"
-reqwest = { version = "0.11", default-features = false, features = [
-  "json",
-  "rustls-tls",
-] }
-semver = { version = "1.0.6", features = ["serde"] }
-serde = { version = "1.0.136", features = ["derive"] }
-serde_json = "1.0.79"
-sha2 = "0.10.2"
-termios = "0.3.3"
-tokio = { version = "1.17.0", features = ["full"] }
+chrono = { version = "0.4", features = ["serde"] }
+clap = { version = "3", features = ["derive"] }
+futures = "0.3"
+graphql_client = "0.10"
+lazy_static = "1"
+reqwest = { version = "0.13", features = ["json"] }
+semver = { version = "1", features = ["serde"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+sha2 = "0.10"
+termios = "0.3"
+tokio = { version = "1", features = ["full"] }
 uuid = "1"

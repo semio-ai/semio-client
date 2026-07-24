@@ -1,4 +1,4 @@
-query GetFrozenQuery($id: Uuid!) {
+query GetFrozenQuery($id: UUID!) {
   module {
     getFrozen(id: $id) {
       __typename

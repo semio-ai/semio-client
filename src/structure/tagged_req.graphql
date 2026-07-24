@@ -1,4 +1,4 @@
-query TaggedReqQuery($id: Uuid!, $versionReq: String!) {
+query TaggedReqQuery($id: UUID!, $versionReq: String!) {
   structure {
     taggedReq(id: $id, versionReq: $versionReq) {
       __typename

@@ -1,4 +1,4 @@
-mutation SetFieldTypeQuery($id: Uuid!, $fieldId: Uuid!, $ty: String!) {
+mutation SetFieldTypeQuery($id: UUID!, $fieldId: UUID!, $ty: String!) {
   structure {
     setFieldType(id: $id, fieldId: $fieldId, type: $ty)
   }

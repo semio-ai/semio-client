@@ -1,4 +1,4 @@
-mutation SetNameQuery($id: Uuid!, $name: String!) {
+mutation SetNameQuery($id: UUID!, $name: String!) {
   enumeration {
     setName(id: $id, name: $name)
   }

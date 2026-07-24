@@ -1,4 +1,4 @@
-query GetPrivateQuery($id: Uuid!) {
+query GetPrivateQuery($id: UUID!) {
   organization {
     getPrivate(id: $id) {
       name

@@ -1,4 +1,4 @@
-mutation SetFunctionReturnTypeQuery($id: Uuid!, $exportId: Uuid!, $ty: String!) {
+mutation SetFunctionReturnTypeQuery($id: UUID!, $exportId: UUID!, $ty: String!) {
   module {
     setFunctionReturnType(id: $id, exportId: $exportId, type: $ty)
   }

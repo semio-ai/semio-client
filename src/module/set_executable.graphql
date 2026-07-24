@@ -1,4 +1,4 @@
-mutation SetExecutableQuery($id: Uuid!, $blobId: Uuid!) {
+mutation SetExecutableQuery($id: UUID!, $blobId: UUID!) {
   module {
     setExecutable(id: $id, blobId: $blobId)
   }

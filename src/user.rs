@@ -3,6 +3,7 @@ use graphql_client::GraphQLQuery;
 use clap::Parser;
 use semio_record::{record::RecordDefn, user::v0::User};
 use uuid::Uuid;
+use uuid::Uuid as UUID;
 
 use crate::{context::Context, Token, common::{check_errors, Selector, FromResponse}};
 

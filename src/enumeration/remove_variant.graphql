@@ -1,4 +1,4 @@
-mutation RemoveVariantQuery($id: Uuid!, $variantId: Uuid!) {
+mutation RemoveVariantQuery($id: UUID!, $variantId: UUID!) {
   enumeration {
     removeVariant(id: $id, variantId: $variantId)
   }

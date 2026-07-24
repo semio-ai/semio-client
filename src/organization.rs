@@ -2,6 +2,7 @@ use crate::common::*;
 use semio_record::acl::Acl;
 use semio_record::{organization::v0::Organization, record::RecordDefn};
 use uuid::Uuid;
+use uuid::Uuid as UUID;
 
 macro_rules! impl_public_from_response {
   ($query: path) => {

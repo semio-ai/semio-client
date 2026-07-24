@@ -1,4 +1,4 @@
-mutation SetPermissionsQuery($id: Uuid!, $agentId: Uuid!, $withPermissions: String!) {
+mutation SetPermissionsQuery($id: UUID!, $agentId: UUID!, $withPermissions: String!) {
   folder {
     setPermissions(id: $id, agentId: $agentId, withPermissions: $withPermissions)
   }

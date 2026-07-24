@@ -1,4 +1,4 @@
-mutation RemoveFieldQuery($id: Uuid!, $fieldId: Uuid!) {
+mutation RemoveFieldQuery($id: UUID!, $fieldId: UUID!) {
   structure {
     removeField(id: $id, fieldId: $fieldId)
   }

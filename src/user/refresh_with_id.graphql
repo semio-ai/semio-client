@@ -1,4 +1,4 @@
-mutation RefreshWithIdQuery($id: Uuid!, $refreshToken: String!) {
+mutation RefreshWithIdQuery($id: UUID!, $refreshToken: String!) {
   user {
     refreshWithId(id: $id, refreshToken: $refreshToken) {
       access {

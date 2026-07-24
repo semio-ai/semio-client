@@ -1,4 +1,4 @@
-query GetVersionFrozenQuery($id: Uuid!, $version: Int!) {
+query GetVersionFrozenQuery($id: UUID!, $version: Int!) {
   structure {
     getVersionFrozen(id: $id, version: $version) {
       __typename

@@ -1,4 +1,4 @@
-query GetVersionPrivateQuery($id: Uuid!, $version: Int!) {
+query GetVersionPrivateQuery($id: UUID!, $version: Int!) {
   folder {
     getVersionPrivate(id: $id, version: $version) {
       parent

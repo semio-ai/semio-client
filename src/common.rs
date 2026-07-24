@@ -12,6 +12,7 @@ use semio_record::{
 use serde::{Deserialize, Serialize};
 use std::fmt::Write;
 use uuid::Uuid;
+use uuid::Uuid as UUID;
 
 use crate::context::Context;
 #[derive(GraphQLQuery)]

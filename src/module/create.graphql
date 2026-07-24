@@ -1,4 +1,4 @@
-mutation CreateQuery($parent: Uuid!, $name: String!) {
+mutation CreateQuery($parent: UUID!, $name: String!) {
   module {
     create(parent: $parent, name: $name)
   }

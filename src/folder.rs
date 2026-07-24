@@ -1,6 +1,7 @@
 use crate::common::*;
 use semio_record::{acl::Acl, folder::v0::Folder, record::RecordDefn};
 use uuid::Uuid;
+use uuid::Uuid as UUID;
 
 macro_rules! impl_public_from_response {
   ($query: path) => {

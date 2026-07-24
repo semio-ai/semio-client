@@ -1,4 +1,4 @@
-query GetVersionPublicQuery($id: Uuid!, $version: Int!) {
+query GetVersionPublicQuery($id: UUID!, $version: Int!) {
   enumeration {
     getVersionPublic(id: $id, version: $version) {
       __typename

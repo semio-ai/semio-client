@@ -1,4 +1,4 @@
-mutation SetParentQuery($id: Uuid!, $parent: Uuid!) {
+mutation SetParentQuery($id: UUID!, $parent: UUID!) {
   folder {
     setParent(id: $id, parent: $parent)
   }

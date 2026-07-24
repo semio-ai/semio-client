@@ -1,4 +1,4 @@
-query GetVersionPrivateQuery($id: Uuid!, $version: Int!) {
+query GetVersionPrivateQuery($id: UUID!, $version: Int!) {
   organization {
     getVersionPrivate(id: $id, version: $version) {
       name

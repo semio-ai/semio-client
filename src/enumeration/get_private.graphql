@@ -1,4 +1,4 @@
-query GetPrivateQuery($id: Uuid!) {
+query GetPrivateQuery($id: UUID!) {
   enumeration {
     getPrivate(id: $id) {
       __typename

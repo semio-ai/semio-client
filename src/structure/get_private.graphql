@@ -1,4 +1,4 @@
-query GetPrivateQuery($id: Uuid!) {
+query GetPrivateQuery($id: UUID!) {
   structure {
     getPrivate(id: $id) {
       __typename

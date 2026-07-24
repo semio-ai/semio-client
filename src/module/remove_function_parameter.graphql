@@ -1,4 +1,4 @@
-mutation RemoveFunctionParameterQuery($id: Uuid!, $exportId: Uuid!, $parameterId: Uuid!) {
+mutation RemoveFunctionParameterQuery($id: UUID!, $exportId: UUID!, $parameterId: UUID!) {
   module {
     removeFunctionParameter(id: $id, exportId: $exportId, parameterId: $parameterId)
   }

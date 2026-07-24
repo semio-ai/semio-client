@@ -1,4 +1,4 @@
-query TaggedQuery($id: Uuid!, $version: String!) {
+query TaggedQuery($id: UUID!, $version: String!) {
   structure {
     tagged(id: $id, version: $version) {
       __typename

@@ -8,6 +8,7 @@ use semio_record::structure::v0::{frozen, unfrozen, Structure};
 use semio_record::ty::{FrozenTy, UnfrozenTy};
 use indexmap::IndexMap;
 use uuid::Uuid;
+use uuid::Uuid as UUID;
 
 macro_rules! impl_unfrozen_structure_field_from_response {
   ($query: path) => {

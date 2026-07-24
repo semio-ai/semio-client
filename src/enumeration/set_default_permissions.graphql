@@ -1,4 +1,4 @@
-mutation SetDefaultPermissionsQuery($id: Uuid!, $withPermissions: String!) {
+mutation SetDefaultPermissionsQuery($id: UUID!, $withPermissions: String!) {
   enumeration {
     setDefaultPermissions(id: $id, withPermissions: $withPermissions)
   }

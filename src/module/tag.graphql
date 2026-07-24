@@ -1,4 +1,4 @@
-mutation TagQuery($id: Uuid!, $version: String!) {
+mutation TagQuery($id: UUID!, $version: String!) {
   module {
     tag(id: $id, version: $version)
   }

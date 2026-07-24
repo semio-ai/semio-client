@@ -1,5 +1,5 @@
-mutation AddVariantQuery($id: Uuid!, $name: String!, $ty: String!) {
+mutation AddVariantQuery($id: UUID!, $name: String!, $ty: String!) {
   enumeration {
-    addVariant(id: $id, name: $name, ty: $ty)
+    addVariant(id: $id, name: $name, type: $ty)
   }
 }

@@ -1,4 +1,4 @@
-query GetPublicQuery($id: Uuid!) {
+query GetPublicQuery($id: UUID!) {
   user {
     getPublic(id: $id) {
       userName

@@ -8,6 +8,7 @@ use semio_record::record::{FrozenReference, UnfrozenReference};
 use semio_record::record::{RecordDefn, Version, VersionReq};
 use semio_record::ty::{FrozenTy, UnfrozenTy};
 use uuid::Uuid;
+use uuid::Uuid as UUID;
 
 use crate::common::*;
 use crate::context::Context;

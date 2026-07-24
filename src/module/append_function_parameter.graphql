@@ -1,5 +1,5 @@
-mutation AppendFunctionParameterQuery($id: Uuid!, $exportId: Uuid!, $name: String!, $ty: String!, $mutable: Boolean) {
+mutation AppendFunctionParameterQuery($id: UUID!, $exportId: UUID!, $name: String!, $ty: String!, $mutable: Boolean) {
   module {
-    appendFunctionParameter(id: $id, exportId: $exportId, name: $name, ty: $ty, mutable: $mutable)
+    appendFunctionParameter(id: $id, exportId: $exportId, name: $name, type: $ty, mutable: $mutable)
   }
 }

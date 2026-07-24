@@ -1,4 +1,4 @@
-mutation AddFunctionQuery($id: Uuid!, $name: String!, $returns: String!) {
+mutation AddFunctionQuery($id: UUID!, $name: String!, $returns: String!) {
   module {
     addFunction(id: $id, name: $name, returns: $returns)
   }

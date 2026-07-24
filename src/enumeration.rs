@@ -7,6 +7,7 @@ use semio_record::record::{RecordDefn, Version, VersionReq};
 use semio_record::ty::{FrozenTy, UnfrozenTy};
 use indexmap::IndexMap;
 use uuid::Uuid;
+use uuid::Uuid as UUID;
 
 macro_rules! impl_unfrozen_enumeration_variant_from_response {
   ($query: path) => {

@@ -7,7 +7,7 @@ use clap::Parser;
 use graphql_client::GraphQLQuery;
 use semio_record::{
   record::{UnfrozenReference, Version, VersionReq},
-  ty::{Primitive, PrimitiveKind, UnfrozenArray, UnfrozenScalar, UnfrozenTy},
+  ty::{Primitive, PrimitiveKind, UnfrozenArray, UnfrozenOption, UnfrozenScalar, UnfrozenTy},
 };
 use serde::{Deserialize, Serialize};
 use std::fmt::Write;
@@ -44,6 +44,8 @@ pub enum UnfrozenSelectorTy {
   Primitive(Primitive),
   Scalar(SelectorVersionReq),
   Array(SelectorVersionReq),
+  /// A value of the element type or none, spelled `T?`.
+  Option(Box<UnfrozenSelectorTy>),
 }
 
 impl From<PrimitiveKind> for UnfrozenSelectorTy {
@@ -60,6 +62,9 @@ impl FromStr for UnfrozenSelectorTy {
   type Err = String;
 
   fn from_str(s: &str) -> Result<Self, Self::Err> {
+    if let Some(element) = s.strip_suffix('?') {
+      return Ok(Self::Option(Box::new(element.parse()?)));
+    }
     let array = s.ends_with("[]");
     let s = if array { &s[..s.len() - 2] } else { s };
     let mut iter = s.split('@');
@@ -346,6 +351,9 @@ impl UnfrozenSelectorTy {
           },
         }))
       }
+      Self::Option(element) => Ok(UnfrozenTy::UnfrozenOption(UnfrozenOption {
+        element: Box::new(Box::pin(element.resolve(context)).await?),
+      })),
     }
   }
 }
@@ -939,15 +947,22 @@ macro_rules! impl_primitive_from_response {
 
 pub(crate) use impl_primitive_from_response;
 
+/// `UnfrozenTy` from a query module's `UnfrozenTyFields` fragment. An option's element
+/// is the `UnfrozenTyElementFields` fragment: a GraphQL selection cannot recurse, so
+/// the query reads one level of option and a nested optional is refused rather
+/// than read partially.
 macro_rules! impl_unfrozen_ty_from_response {
-  ($query: path) => {
-    impl FromResponse<$query> for semio_record::ty::UnfrozenTy {
-      fn from_response(value: $query) -> anyhow::Result<Self> {
+  ($query: ident) => {
+    crate::common::impl_primitive_from_response!($query::UnfrozenTyFieldsOnPrimitive);
+    crate::common::impl_primitive_from_response!($query::UnfrozenTyElementFieldsOnPrimitive);
+
+    impl FromResponse<$query::UnfrozenTyFields> for semio_record::ty::UnfrozenTy {
+      fn from_response(value: $query::UnfrozenTyFields) -> anyhow::Result<Self> {
         match value {
-          <$query>::Primitive(value) => Ok(Self::Primitive(
+          $query::UnfrozenTyFields::Primitive(value) => Ok(Self::Primitive(
             semio_record::ty::Primitive::from_response(value)?,
           )),
-          <$query>::UnfrozenScalar(value) => {
+          $query::UnfrozenTyFields::UnfrozenScalar(value) => {
             Ok(Self::UnfrozenScalar(semio_record::ty::UnfrozenScalar {
               reference: semio_record::record::UnfrozenReference {
                 id: value.reference.id,
@@ -955,13 +970,47 @@ macro_rules! impl_unfrozen_ty_from_response {
               },
             }))
           }
-          <$query>::UnfrozenArray(value) => {
+          $query::UnfrozenTyFields::UnfrozenArray(value) => {
             Ok(Self::UnfrozenArray(semio_record::ty::UnfrozenArray {
               reference: semio_record::record::UnfrozenReference {
                 id: value.reference.id,
                 version_req: value.reference.version_req,
               },
             }))
+          }
+          $query::UnfrozenTyFields::UnfrozenOption(value) => {
+            Ok(Self::UnfrozenOption(semio_record::ty::UnfrozenOption {
+              element: Box::new(Self::from_response(value.element)?),
+            }))
+          }
+        }
+      }
+    }
+
+    impl FromResponse<$query::UnfrozenTyElementFields> for semio_record::ty::UnfrozenTy {
+      fn from_response(value: $query::UnfrozenTyElementFields) -> anyhow::Result<Self> {
+        match value {
+          $query::UnfrozenTyElementFields::Primitive(value) => Ok(Self::Primitive(
+            semio_record::ty::Primitive::from_response(value)?,
+          )),
+          $query::UnfrozenTyElementFields::UnfrozenScalar(value) => {
+            Ok(Self::UnfrozenScalar(semio_record::ty::UnfrozenScalar {
+              reference: semio_record::record::UnfrozenReference {
+                id: value.reference.id,
+                version_req: value.reference.version_req,
+              },
+            }))
+          }
+          $query::UnfrozenTyElementFields::UnfrozenArray(value) => {
+            Ok(Self::UnfrozenArray(semio_record::ty::UnfrozenArray {
+              reference: semio_record::record::UnfrozenReference {
+                id: value.reference.id,
+                version_req: value.reference.version_req,
+              },
+            }))
+          }
+          $query::UnfrozenTyElementFields::UnfrozenOption => {
+            Err(anyhow::anyhow!("nested optional types are not supported"))
           }
         }
       }
@@ -971,26 +1020,71 @@ macro_rules! impl_unfrozen_ty_from_response {
 
 pub(crate) use impl_unfrozen_ty_from_response;
 
+/// `FrozenTy` from a query module's `FrozenTyFields` fragment. An option's element
+/// is the `FrozenTyElementFields` fragment: a GraphQL selection cannot recurse, so
+/// the query reads one level of option and a nested optional is refused rather
+/// than read partially.
 macro_rules! impl_frozen_ty_from_response {
-  ($query: path) => {
-    impl FromResponse<$query> for semio_record::ty::FrozenTy {
-      fn from_response(value: $query) -> anyhow::Result<Self> {
+  ($query: ident) => {
+    crate::common::impl_primitive_from_response!($query::FrozenTyFieldsOnPrimitive);
+    crate::common::impl_primitive_from_response!($query::FrozenTyElementFieldsOnPrimitive);
+
+    impl FromResponse<$query::FrozenTyFields> for semio_record::ty::FrozenTy {
+      fn from_response(value: $query::FrozenTyFields) -> anyhow::Result<Self> {
         match value {
-          <$query>::Primitive(value) => Ok(Self::Primitive(
+          $query::FrozenTyFields::Primitive(value) => Ok(Self::Primitive(
             semio_record::ty::Primitive::from_response(value)?,
           )),
-          <$query>::FrozenScalar(value) => Ok(Self::FrozenScalar(semio_record::ty::FrozenScalar {
-            reference: semio_record::record::FrozenReference {
-              id: value.reference.id,
-              version: value.reference.version,
-            },
-          })),
-          <$query>::FrozenArray(value) => Ok(Self::FrozenArray(semio_record::ty::FrozenArray {
-            reference: semio_record::record::FrozenReference {
-              id: value.reference.id,
-              version: value.reference.version,
-            },
-          })),
+          $query::FrozenTyFields::FrozenScalar(value) => {
+            Ok(Self::FrozenScalar(semio_record::ty::FrozenScalar {
+              reference: semio_record::record::FrozenReference {
+                id: value.reference.id,
+                version: value.reference.version,
+              },
+            }))
+          }
+          $query::FrozenTyFields::FrozenArray(value) => {
+            Ok(Self::FrozenArray(semio_record::ty::FrozenArray {
+              reference: semio_record::record::FrozenReference {
+                id: value.reference.id,
+                version: value.reference.version,
+              },
+            }))
+          }
+          $query::FrozenTyFields::FrozenOption(value) => {
+            Ok(Self::FrozenOption(semio_record::ty::FrozenOption {
+              element: Box::new(Self::from_response(value.element)?),
+            }))
+          }
+        }
+      }
+    }
+
+    impl FromResponse<$query::FrozenTyElementFields> for semio_record::ty::FrozenTy {
+      fn from_response(value: $query::FrozenTyElementFields) -> anyhow::Result<Self> {
+        match value {
+          $query::FrozenTyElementFields::Primitive(value) => Ok(Self::Primitive(
+            semio_record::ty::Primitive::from_response(value)?,
+          )),
+          $query::FrozenTyElementFields::FrozenScalar(value) => {
+            Ok(Self::FrozenScalar(semio_record::ty::FrozenScalar {
+              reference: semio_record::record::FrozenReference {
+                id: value.reference.id,
+                version: value.reference.version,
+              },
+            }))
+          }
+          $query::FrozenTyElementFields::FrozenArray(value) => {
+            Ok(Self::FrozenArray(semio_record::ty::FrozenArray {
+              reference: semio_record::record::FrozenReference {
+                id: value.reference.id,
+                version: value.reference.version,
+              },
+            }))
+          }
+          $query::FrozenTyElementFields::FrozenOption => {
+            Err(anyhow::anyhow!("nested optional types are not supported"))
+          }
         }
       }
     }
@@ -1136,4 +1230,28 @@ pub async fn tags(context: &Context, data: Tags) -> anyhow::Result<Vec<Version>>
   }
 
   Ok(res)
+}
+
+#[cfg(test)]
+mod tests {
+  use super::*;
+
+  #[test]
+  fn a_trailing_question_mark_spells_an_option() {
+    let UnfrozenSelectorTy::Option(element) = "u8?".parse().unwrap() else {
+      panic!("`u8?` is not an option");
+    };
+    assert!(
+      matches!(*element, UnfrozenSelectorTy::Primitive(ref p) if p.kind == PrimitiveKind::U8)
+    );
+
+    let UnfrozenSelectorTy::Option(element) = "alice.Widget@^1[]?".parse().unwrap() else {
+      panic!("`alice.Widget@^1[]?` is not an option");
+    };
+    let UnfrozenSelectorTy::Array(reference) = *element else {
+      panic!("the element of `alice.Widget@^1[]?` is not an array");
+    };
+    assert_eq!(reference.selector, Selector::Path("alice.Widget".into()));
+    assert_eq!(reference.version_req.to_string(), "^1");
+  }
 }

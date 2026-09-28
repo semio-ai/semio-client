@@ -11,27 +11,57 @@ query TaggedReqQuery($id: UUID!, $versionReq: String!) {
           __typename
           name
           type {
-            __typename
-            ... on Primitive {
-              kind
-            }
-            ... on FrozenScalar {
-              reference {
-                __typename
-                id
-                version
-              }
-            }
-            ... on FrozenArray {
-              reference {
-                __typename
-                id
-                version
-              }
-            }
+            ...FrozenTyFields
           }
         }
       }
+    }
+  }
+}
+
+fragment FrozenTyFields on FrozenTy {
+  __typename
+  ... on Primitive {
+    kind
+  }
+  ... on FrozenScalar {
+    reference {
+      __typename
+      id
+      version
+    }
+  }
+  ... on FrozenArray {
+    reference {
+      __typename
+      id
+      version
+    }
+  }
+  ... on FrozenOption {
+    element {
+      ...FrozenTyElementFields
+    }
+  }
+}
+
+fragment FrozenTyElementFields on FrozenTy {
+  __typename
+  ... on Primitive {
+    kind
+  }
+  ... on FrozenScalar {
+    reference {
+      __typename
+      id
+      version
+    }
+  }
+  ... on FrozenArray {
+    reference {
+      __typename
+      id
+      version
     }
   }
 }

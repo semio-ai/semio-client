@@ -101,10 +101,7 @@ macro_rules! impl_frozen_from_response {
 }
 
 impl_primitive_kind_from_response!(get_public_query::PrimitiveKind);
-impl_primitive_from_response!(
-  get_public_query::GetPublicQueryStructureGetPublicFieldsFieldTypeOnPrimitive
-);
-impl_unfrozen_ty_from_response!(get_public_query::GetPublicQueryStructureGetPublicFieldsFieldType);
+impl_unfrozen_ty_from_response!(get_public_query);
 impl_unfrozen_structure_field_from_response!(
   get_public_query::GetPublicQueryStructureGetPublicFieldsField
 );
@@ -119,22 +116,14 @@ impl_with_permissions_from_response!(
 );
 impl_acl_from_response!(get_private_query::GetPrivateQueryStructureGetPrivateAcl);
 impl_primitive_kind_from_response!(get_private_query::PrimitiveKind);
-impl_primitive_from_response!(
-  get_private_query::GetPrivateQueryStructureGetPrivateFieldsFieldTypeOnPrimitive
-);
-impl_unfrozen_ty_from_response!(
-  get_private_query::GetPrivateQueryStructureGetPrivateFieldsFieldType
-);
+impl_unfrozen_ty_from_response!(get_private_query);
 impl_unfrozen_structure_field_from_response!(
   get_private_query::GetPrivateQueryStructureGetPrivateFieldsField
 );
 impl_private_from_response!(get_private_query::GetPrivateQueryStructureGetPrivate);
 
 impl_primitive_kind_from_response!(get_version_public_query::PrimitiveKind);
-impl_primitive_from_response!(get_version_public_query::GetVersionPublicQueryStructureGetVersionPublicFieldsFieldTypeOnPrimitive);
-impl_unfrozen_ty_from_response!(
-  get_version_public_query::GetVersionPublicQueryStructureGetVersionPublicFieldsFieldType
-);
+impl_unfrozen_ty_from_response!(get_version_public_query);
 impl_unfrozen_structure_field_from_response!(
   get_version_public_query::GetVersionPublicQueryStructureGetVersionPublicFieldsField
 );
@@ -151,10 +140,7 @@ impl_acl_from_response!(
   get_version_private_query::GetVersionPrivateQueryStructureGetVersionPrivateAcl
 );
 impl_primitive_kind_from_response!(get_version_private_query::PrimitiveKind);
-impl_primitive_from_response!(get_version_private_query::GetVersionPrivateQueryStructureGetVersionPrivateFieldsFieldTypeOnPrimitive);
-impl_unfrozen_ty_from_response!(
-  get_version_private_query::GetVersionPrivateQueryStructureGetVersionPrivateFieldsFieldType
-);
+impl_unfrozen_ty_from_response!(get_version_private_query);
 impl_unfrozen_structure_field_from_response!(
   get_version_private_query::GetVersionPrivateQueryStructureGetVersionPrivateFieldsField
 );
@@ -164,17 +150,13 @@ impl_private_from_response!(
 
 // tagged_query
 impl_primitive_kind_from_response!(tagged_query::PrimitiveKind);
-impl_primitive_from_response!(tagged_query::TaggedQueryStructureTaggedFieldsFieldTypeOnPrimitive);
-impl_frozen_ty_from_response!(tagged_query::TaggedQueryStructureTaggedFieldsFieldType);
+impl_frozen_ty_from_response!(tagged_query);
 impl_frozen_structure_field_from_response!(tagged_query::TaggedQueryStructureTaggedFieldsField);
 impl_frozen_from_response!(tagged_query::TaggedQueryStructureTagged);
 
 // tagged_req_query
 impl_primitive_kind_from_response!(tagged_req_query::PrimitiveKind);
-impl_primitive_from_response!(
-  tagged_req_query::TaggedReqQueryStructureTaggedReqFieldsFieldTypeOnPrimitive
-);
-impl_frozen_ty_from_response!(tagged_req_query::TaggedReqQueryStructureTaggedReqFieldsFieldType);
+impl_frozen_ty_from_response!(tagged_req_query);
 impl_frozen_structure_field_from_response!(
   tagged_req_query::TaggedReqQueryStructureTaggedReqFieldsField
 );
@@ -182,15 +164,13 @@ impl_frozen_from_response!(tagged_req_query::TaggedReqQueryStructureTaggedReq);
 
 // get_frozen_query
 impl_primitive_kind_from_response!(get_frozen_query::PrimitiveKind);
-impl_primitive_from_response!(get_frozen_query::GetFrozenQueryStructureGetFrozenFieldsFieldTypeOnPrimitive);
-impl_frozen_ty_from_response!(get_frozen_query::GetFrozenQueryStructureGetFrozenFieldsFieldType);
+impl_frozen_ty_from_response!(get_frozen_query);
 impl_frozen_structure_field_from_response!(get_frozen_query::GetFrozenQueryStructureGetFrozenFieldsField);
 impl_frozen_from_response!(get_frozen_query::GetFrozenQueryStructureGetFrozen);
 
 // get_version_frozen_query
 impl_primitive_kind_from_response!(get_version_frozen_query::PrimitiveKind);
-impl_primitive_from_response!(get_version_frozen_query::GetVersionFrozenQueryStructureGetVersionFrozenFieldsFieldTypeOnPrimitive);
-impl_frozen_ty_from_response!(get_version_frozen_query::GetVersionFrozenQueryStructureGetVersionFrozenFieldsFieldType);
+impl_frozen_ty_from_response!(get_version_frozen_query);
 impl_frozen_structure_field_from_response!(get_version_frozen_query::GetVersionFrozenQueryStructureGetVersionFrozenFieldsField);
 impl_frozen_from_response!(get_version_frozen_query::GetVersionFrozenQueryStructureGetVersionFrozen);
 
@@ -363,4 +343,74 @@ pub async fn set_field_name<'a>(context: &Context, data: SetFieldName) -> anyhow
   check_errors(&response.errors)?;
 
   Ok(response.data.unwrap().structure.set_field_name)
+}
+
+#[cfg(test)]
+mod tests {
+  use semio_record::record::FrozenReference;
+  use semio_record::ty::{
+    FrozenArray, FrozenOption, FrozenTy, PrimitiveKind, UnfrozenOption, UnfrozenTy,
+  };
+  use serde_json::json;
+  use uuid::Uuid;
+
+  use super::*;
+
+  fn frozen(value: serde_json::Value) -> anyhow::Result<FrozenTy> {
+    FrozenTy::from_response(serde_json::from_value::<get_frozen_query::FrozenTyFields>(
+      value,
+    )?)
+  }
+
+  #[test]
+  fn a_frozen_option_reads_its_element() {
+    let id = Uuid::new_v4();
+    let ty = frozen(json!({
+      "__typename": "FrozenOption",
+      "element": {
+        "__typename": "FrozenArray",
+        "reference": { "__typename": "FrozenReference", "id": id, "version": "1.2.0" },
+      },
+    }))
+    .unwrap();
+    assert_eq!(
+      ty,
+      FrozenTy::FrozenOption(FrozenOption {
+        element: Box::new(FrozenTy::FrozenArray(FrozenArray {
+          reference: FrozenReference {
+            id,
+            version: Version::parse("1.2.0").unwrap(),
+          },
+        })),
+      })
+    );
+  }
+
+  #[test]
+  fn a_nested_frozen_option_is_refused() {
+    let error = frozen(json!({
+      "__typename": "FrozenOption",
+      "element": { "__typename": "FrozenOption" },
+    }))
+    .unwrap_err();
+    assert!(error.to_string().contains("nested optional"), "{error}");
+  }
+
+  #[test]
+  fn an_unfrozen_option_reads_its_element() {
+    let value = json!({
+      "__typename": "UnfrozenOption",
+      "element": { "__typename": "Primitive", "kind": "U8" },
+    });
+    let ty = UnfrozenTy::from_response(
+      serde_json::from_value::<get_public_query::UnfrozenTyFields>(value).unwrap(),
+    )
+    .unwrap();
+    assert_eq!(
+      ty,
+      UnfrozenTy::UnfrozenOption(UnfrozenOption {
+        element: Box::new(PrimitiveKind::U8.into()),
+      })
+    );
+  }
 }

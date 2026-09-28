@@ -101,12 +101,7 @@ macro_rules! impl_frozen_from_response {
 
 // get_public_query
 impl_primitive_kind_from_response!(get_public_query::PrimitiveKind);
-impl_primitive_from_response!(
-  get_public_query::GetPublicQueryEnumerationGetPublicVariantsVariantTypeOnPrimitive
-);
-impl_unfrozen_ty_from_response!(
-  get_public_query::GetPublicQueryEnumerationGetPublicVariantsVariantType
-);
+impl_unfrozen_ty_from_response!(get_public_query);
 impl_unfrozen_enumeration_variant_from_response!(
   get_public_query::GetPublicQueryEnumerationGetPublicVariantsVariant
 );
@@ -122,12 +117,7 @@ impl_with_permissions_from_response!(
 );
 impl_acl_from_response!(get_private_query::GetPrivateQueryEnumerationGetPrivateAcl);
 impl_primitive_kind_from_response!(get_private_query::PrimitiveKind);
-impl_primitive_from_response!(
-  get_private_query::GetPrivateQueryEnumerationGetPrivateVariantsVariantTypeOnPrimitive
-);
-impl_unfrozen_ty_from_response!(
-  get_private_query::GetPrivateQueryEnumerationGetPrivateVariantsVariantType
-);
+impl_unfrozen_ty_from_response!(get_private_query);
 impl_unfrozen_enumeration_variant_from_response!(
   get_private_query::GetPrivateQueryEnumerationGetPrivateVariantsVariant
 );
@@ -135,10 +125,7 @@ impl_private_from_response!(get_private_query::GetPrivateQueryEnumerationGetPriv
 
 // get_version_public_query
 impl_primitive_kind_from_response!(get_version_public_query::PrimitiveKind);
-impl_primitive_from_response!(get_version_public_query::GetVersionPublicQueryEnumerationGetVersionPublicVariantsVariantTypeOnPrimitive);
-impl_unfrozen_ty_from_response!(
-  get_version_public_query::GetVersionPublicQueryEnumerationGetVersionPublicVariantsVariantType
-);
+impl_unfrozen_ty_from_response!(get_version_public_query);
 impl_unfrozen_enumeration_variant_from_response!(
   get_version_public_query::GetVersionPublicQueryEnumerationGetVersionPublicVariantsVariant
 );
@@ -156,10 +143,7 @@ impl_acl_from_response!(
   get_version_private_query::GetVersionPrivateQueryEnumerationGetVersionPrivateAcl
 );
 impl_primitive_kind_from_response!(get_version_private_query::PrimitiveKind);
-impl_primitive_from_response!(get_version_private_query::GetVersionPrivateQueryEnumerationGetVersionPrivateVariantsVariantTypeOnPrimitive);
-impl_unfrozen_ty_from_response!(
-  get_version_private_query::GetVersionPrivateQueryEnumerationGetVersionPrivateVariantsVariantType
-);
+impl_unfrozen_ty_from_response!(get_version_private_query);
 impl_unfrozen_enumeration_variant_from_response!(
   get_version_private_query::GetVersionPrivateQueryEnumerationGetVersionPrivateVariantsVariant
 );
@@ -169,10 +153,7 @@ impl_private_from_response!(
 
 // tagged_query
 impl_primitive_kind_from_response!(tagged_query::PrimitiveKind);
-impl_primitive_from_response!(
-  tagged_query::TaggedQueryEnumerationTaggedVariantsVariantTypeOnPrimitive
-);
-impl_frozen_ty_from_response!(tagged_query::TaggedQueryEnumerationTaggedVariantsVariantType);
+impl_frozen_ty_from_response!(tagged_query);
 impl_frozen_enumeration_variant_from_response!(
   tagged_query::TaggedQueryEnumerationTaggedVariantsVariant
 );
@@ -180,12 +161,7 @@ impl_frozen_from_response!(tagged_query::TaggedQueryEnumerationTagged);
 
 // tagged_req_query
 impl_primitive_kind_from_response!(tagged_req_query::PrimitiveKind);
-impl_primitive_from_response!(
-  tagged_req_query::TaggedReqQueryEnumerationTaggedReqVariantsVariantTypeOnPrimitive
-);
-impl_frozen_ty_from_response!(
-  tagged_req_query::TaggedReqQueryEnumerationTaggedReqVariantsVariantType
-);
+impl_frozen_ty_from_response!(tagged_req_query);
 impl_frozen_enumeration_variant_from_response!(
   tagged_req_query::TaggedReqQueryEnumerationTaggedReqVariantsVariant
 );
@@ -194,12 +170,7 @@ impl_frozen_from_response!(tagged_req_query::TaggedReqQueryEnumerationTaggedReq)
 
 // get_frozen_query
 impl_primitive_kind_from_response!(get_frozen_query::PrimitiveKind);
-impl_primitive_from_response!(
-  get_frozen_query::GetFrozenQueryEnumerationGetFrozenVariantsVariantTypeOnPrimitive
-);
-impl_frozen_ty_from_response!(
-  get_frozen_query::GetFrozenQueryEnumerationGetFrozenVariantsVariantType
-);
+impl_frozen_ty_from_response!(get_frozen_query);
 impl_frozen_enumeration_variant_from_response!(
   get_frozen_query::GetFrozenQueryEnumerationGetFrozenVariantsVariant
 );
@@ -207,12 +178,7 @@ impl_frozen_from_response!(get_frozen_query::GetFrozenQueryEnumerationGetFrozen)
 
 // get_version_frozen_query
 impl_primitive_kind_from_response!(get_version_frozen_query::PrimitiveKind);
-impl_primitive_from_response!(
-  get_version_frozen_query::GetVersionFrozenQueryEnumerationGetVersionFrozenVariantsVariantTypeOnPrimitive
-);
-impl_frozen_ty_from_response!(
-  get_version_frozen_query::GetVersionFrozenQueryEnumerationGetVersionFrozenVariantsVariantType
-);
+impl_frozen_ty_from_response!(get_version_frozen_query);
 impl_frozen_enumeration_variant_from_response!(
   get_version_frozen_query::GetVersionFrozenQueryEnumerationGetVersionFrozenVariantsVariant
 );

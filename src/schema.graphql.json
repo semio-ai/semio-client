@@ -2405,6 +2405,33 @@
         },
         {
           "kind": "OBJECT",
+          "name": "FrozenOption",
+          "description": "A value of `element` or none.",
+          "fields": [
+            {
+              "name": "element",
+              "description": null,
+              "args": [],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "UNION",
+                  "name": "FrozenTy",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [],
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "OBJECT",
           "name": "FrozenEnumeration",
           "description": null,
           "fields": [
@@ -7889,6 +7916,33 @@
         },
         {
           "kind": "OBJECT",
+          "name": "UnfrozenOption",
+          "description": "A value of `element` or none.",
+          "fields": [
+            {
+              "name": "element",
+              "description": null,
+              "args": [],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "UNION",
+                  "name": "UnfrozenTy",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [],
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "OBJECT",
           "name": "UnfrozenReference",
           "description": null,
           "fields": [
@@ -9397,6 +9451,11 @@
               "kind": "OBJECT",
               "name": "FrozenArray",
               "ofType": null
+            },
+            {
+              "kind": "OBJECT",
+              "name": "FrozenOption",
+              "ofType": null
             }
           ]
         },
@@ -9422,6 +9481,11 @@
             {
               "kind": "OBJECT",
               "name": "UnfrozenArray",
+              "ofType": null
+            },
+            {
+              "kind": "OBJECT",
+              "name": "UnfrozenOption",
               "ofType": null
             }
           ]

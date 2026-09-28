@@ -10,27 +10,57 @@ query GetVersionPublicQuery($id: UUID!, $version: Int!) {
           __typename
           name
           type {
-            __typename
-            ... on Primitive {
-              kind
-            }
-            ... on UnfrozenScalar {
-              reference {
-                __typename
-                id
-                versionReq
-              }
-            }
-            ... on UnfrozenArray {
-              reference {
-                __typename
-                id
-                versionReq
-              }
-            }
+            ...UnfrozenTyFields
           }
         }
       }
+    }
+  }
+}
+
+fragment UnfrozenTyFields on UnfrozenTy {
+  __typename
+  ... on Primitive {
+    kind
+  }
+  ... on UnfrozenScalar {
+    reference {
+      __typename
+      id
+      versionReq
+    }
+  }
+  ... on UnfrozenArray {
+    reference {
+      __typename
+      id
+      versionReq
+    }
+  }
+  ... on UnfrozenOption {
+    element {
+      ...UnfrozenTyElementFields
+    }
+  }
+}
+
+fragment UnfrozenTyElementFields on UnfrozenTy {
+  __typename
+  ... on Primitive {
+    kind
+  }
+  ... on UnfrozenScalar {
+    reference {
+      __typename
+      id
+      versionReq
+    }
+  }
+  ... on UnfrozenArray {
+    reference {
+      __typename
+      id
+      versionReq
     }
   }
 }

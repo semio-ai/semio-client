@@ -1,0 +1,26 @@
+[package]
+name = "semio-studio-auth"
+version = "0.1.0"
+edition = "2024"
+license = "MIT"
+description = "Sign-in, sessions and token renewal for Semio Studio accounts, for tools that run outside the browser"
+repository = "https://github.com/semio-ai/semio-client"
+readme = "README.md"
+keywords = ["semio", "studio", "firebase", "auth"]
+categories = ["authentication"]
+
+[dependencies]
+base64 = "0.22"
+futures-util = "0.3"
+rand = "0.9"
+reqwest = { version = "0.13", default-features = false, features = ["rustls", "form"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+thiserror = "2"
+# The loopback listener of Studio's /tool-login sign-in.
+tiny_http = "0.12"
+
+[dev-dependencies]
+reqwest = { version = "0.13", default-features = false, features = ["blocking"] }
+tokio = { version = "1", features = ["macros", "rt-multi-thread"] }
+wiremock = "0.6"

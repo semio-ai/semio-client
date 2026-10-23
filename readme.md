@@ -1,9 +1,20 @@
 # Semio Client
 
+This repository holds Semio's Studio client crates, for tools that run outside
+the browser. `semio-studio-auth` is the first. The root crate, `semio-client`,
+is semio-db's GraphQL client and is deprecated.
+
+| Crate | What it does |
+| --- | --- |
+| [`semio-studio-auth`](crates/semio-studio-auth) | Sign-in to a Studio account, sessions and token renewal |
+| `semio-client` (this directory) | **Deprecated.** Rust bindings to query a [Semio Database](https://github.com/semio-ai/semio-db.git) |
+
+## semio-client (deprecated)
+
 A library providing Rust bindings to query a
 [Semio Database](https://github.com/semio-ai/semio-db.git).
 
-## Authentication
+### Authentication
 
 All operations rely on a [`Context`](src/context.rs),
 which holds a [`reqwest::Client`](https://docs.rs/reqwest/latest/reqwest/struct.Client.html).
@@ -45,7 +56,7 @@ let (token, config_mutation) =
 config = Some(config_mutation.next(config));
 ```
 
-## Record and query types
+### Record and query types
 
 The database provides records of type
 [`User`](src/user.rs),
@@ -73,7 +84,7 @@ but some of them are common:
 - `get_frozen`: freezes a record on-the-fly,
   without producing a new tagged record.
 
-## Selector
+### Selector
 
 A [`Selector`](src/common.rs) is an identifier of a record,
 either in a form of an [`UUID`](https://docs.rs/uuid/latest/uuid/index.html),

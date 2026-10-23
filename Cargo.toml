@@ -1,3 +1,7 @@
+[workspace]
+members = [".", "crates/semio-studio-auth"]
+resolver = "2"
+
 [package]
 name = "semio-client"
 version = "0.1.0"

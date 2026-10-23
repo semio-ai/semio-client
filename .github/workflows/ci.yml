@@ -14,7 +14,7 @@ jobs:
       - uses: Swatinem/rust-cache@v2
       - run: cargo test
 
-  # A crates.io library builds on stable, so it is checked on stable.
+  # A library others depend on builds on stable, so it is checked on stable.
   semio-studio-auth:
     runs-on: ubuntu-latest
     steps:

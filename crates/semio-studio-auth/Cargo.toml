@@ -2,12 +2,11 @@
 name = "semio-studio-auth"
 version = "0.1.0"
 edition = "2024"
-license = "MIT"
+# Proprietary to Semio: never published to a public registry.
+publish = false
 description = "Sign-in, sessions and token renewal for Semio Studio accounts, for tools that run outside the browser"
 repository = "https://github.com/semio-ai/semio-client"
 readme = "README.md"
-keywords = ["semio", "studio", "firebase", "auth"]
-categories = ["authentication"]
 
 [dependencies]
 base64 = "0.22"
